@@ -1,9 +1,12 @@
 package sg.edu.nus.cabrepublic;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.*;
 
 
 public class LoginActivity extends Activity {
@@ -32,5 +35,55 @@ public class LoginActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onSignUpButtonClicked(View view){
+        EditText userEmail = (EditText) findViewById(R.id.email_address);
+        EditText userPassword = (EditText) findViewById(R.id.password);
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(userEmail.getText()).matches()) {
+            showSignUpErrorMessage("Have you input the email correctly?");
+        } else if (userEmail.getText().toString().equals("")) {
+            showSignUpErrorMessage("Please input an email.");
+        } else if (userPassword.getText().toString().equals("")) {
+            showSignUpErrorMessage("Please input a password.");
+        } else {
+            /*
+            Handler signupHandler = new Handler() {
+                @Override
+                public void handleMessage(Message userMsg) {
+                    stopLoadingAnimation();
+                    if (userMsg.what == 0) {
+                        DataManager.getInstance().persistData(SignupActivity.this);
+                        Intent intent = new Intent(SignupActivity.this, GenreActivity.class);
+                        intent.putExtra("ENTRANCE", 1);
+                        intent.putExtra("NEW_USER", true);
+                        ViewHelper.getInstance().toastMessage(SignupActivity.this, R.string.signup_success_message);
+                        startActivity(intent);
+                    } else {
+                        ViewHelper.getInstance().handleRequestFailure(SignupActivity.this, userMsg.what, (String) userMsg.obj);
+                    }
+
+                }
+            };
+            startLoadingAnimation();
+            if (mode == MODE_NORMAL) {
+                DataManager.getInstance().signupWithCompletion(new UserSignupInfo(userEmail.getText().toString(), userPassword.getText().toString(), username.getText().toString(), "", "-1", "", gender, DEFAULT_BIRTHDAY), signupHandler);
+            } else if (mode == MODE_RENREN) {
+                DataManager.getInstance().signupWithCompletion(new UserSignupInfo(userEmail.getText().toString(), userPassword.getText().toString(), username.getText().toString(), "renren", uid, avatar, gender, DEFAULT_BIRTHDAY), signupHandler);
+            } else if (mode == MODE_WEIBO) {
+                DataManager.getInstance().signupWithCompletion(new UserSignupInfo(userEmail.getText().toString(), userPassword.getText().toString(), username.getText().toString(), "weibo", uid, avatar, gender, DEFAULT_BIRTHDAY), signupHandler);
+            } else if (mode == MODE_QQ) {
+                DataManager.getInstance().signupWithCompletion(new UserSignupInfo(userEmail.getText().toString(), userPassword.getText().toString(), username.getText().toString(), "qq_connect", uid, avatar, gender, DEFAULT_BIRTHDAY), signupHandler);
+            }
+            */
+
+        }
+    }
+
+    public void showSignUpErrorMessage(String message) {
+        new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("SignUpFail")
+                .setMessage(message)
+                .setPositiveButton("Ok", null).show();
     }
 }
