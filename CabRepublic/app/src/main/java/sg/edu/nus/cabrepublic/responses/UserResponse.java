@@ -1,4 +1,6 @@
-package sg.edu.nus.cabrepublic.models;
+package sg.edu.nus.cabrepublic.responses;
+
+import sg.edu.nus.cabrepublic.models.User;
 
 /**
  * Created by zhixing on 14.11.04.

@@ -2,12 +2,19 @@ package sg.edu.nus.cabrepublic;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
+import android.os.Handler;
 
+import sg.edu.nus.cabrepublic.requests.UserLoginRequest;
+import sg.edu.nus.cabrepublic.utilities.CRDataManager;
+import sg.edu.nus.cabrepublic.utilities.UserCredential;
 
 public class LoginActivity extends Activity {
 
@@ -16,7 +23,6 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -37,7 +43,7 @@ public class LoginActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onSignUpButtonClicked(View view){
+    public void onLoginButtonClicked(View view){
         EditText userEmail = (EditText) findViewById(R.id.email_address);
         EditText userPassword = (EditText) findViewById(R.id.password);
 
@@ -48,36 +54,26 @@ public class LoginActivity extends Activity {
         } else if (userPassword.getText().toString().equals("")) {
             showSignUpErrorMessage("Please input a password.");
         } else {
-            /*
-            Handler signupHandler = new Handler() {
+
+            Handler loginHandler = new Handler() {
                 @Override
                 public void handleMessage(Message userMsg) {
-                    stopLoadingAnimation();
                     if (userMsg.what == 0) {
-                        DataManager.getInstance().persistData(SignupActivity.this);
-                        Intent intent = new Intent(SignupActivity.this, GenreActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
                         intent.putExtra("ENTRANCE", 1);
                         intent.putExtra("NEW_USER", true);
-                        ViewHelper.getInstance().toastMessage(SignupActivity.this, R.string.signup_success_message);
+                        Toast toast = Toast.makeText(LoginActivity.this, "Successfully Logged in", Toast.LENGTH_LONG);
+                        toast.show();
                         startActivity(intent);
                     } else {
-                        ViewHelper.getInstance().handleRequestFailure(SignupActivity.this, userMsg.what, (String) userMsg.obj);
+                        Log.d("ERROR", "Login fail");
+                        //ViewHelper.getInstance().handleRequestFailure(LoginActivity.this, userMsg.what, (String) userMsg.obj);
                     }
 
                 }
             };
-            startLoadingAnimation();
-            if (mode == MODE_NORMAL) {
-                DataManager.getInstance().signupWithCompletion(new UserSignupInfo(userEmail.getText().toString(), userPassword.getText().toString(), username.getText().toString(), "", "-1", "", gender, DEFAULT_BIRTHDAY), signupHandler);
-            } else if (mode == MODE_RENREN) {
-                DataManager.getInstance().signupWithCompletion(new UserSignupInfo(userEmail.getText().toString(), userPassword.getText().toString(), username.getText().toString(), "renren", uid, avatar, gender, DEFAULT_BIRTHDAY), signupHandler);
-            } else if (mode == MODE_WEIBO) {
-                DataManager.getInstance().signupWithCompletion(new UserSignupInfo(userEmail.getText().toString(), userPassword.getText().toString(), username.getText().toString(), "weibo", uid, avatar, gender, DEFAULT_BIRTHDAY), signupHandler);
-            } else if (mode == MODE_QQ) {
-                DataManager.getInstance().signupWithCompletion(new UserSignupInfo(userEmail.getText().toString(), userPassword.getText().toString(), username.getText().toString(), "qq_connect", uid, avatar, gender, DEFAULT_BIRTHDAY), signupHandler);
-            }
-            */
-
+            UserCredential credentials = new UserCredential(userEmail.getText().toString(), userPassword.getText().toString());
+            CRDataManager.getInstance().loginWithCompletion(credentials, loginHandler);
         }
     }
 

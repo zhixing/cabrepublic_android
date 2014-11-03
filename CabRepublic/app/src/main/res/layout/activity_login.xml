@@ -31,7 +31,7 @@
         android:layout_below="@+id/password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:onClick="onSignUpButtonClicked"
+        android:onClick="onLoginButtonClicked"
         android:text="Login"
         android:textColor="#FFFFFF" />
 
