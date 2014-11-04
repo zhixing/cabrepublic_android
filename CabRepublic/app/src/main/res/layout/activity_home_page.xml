@@ -1,16 +1,91 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="sg.edu.nus.cabrepublic.HomePageActivity">
+    android:background="#2c2c2c"
+    tools:context=".HomePageActivity"
+    tools:ignore="MergeRootFrame">
 
-    <TextView
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <sg.edu.nus.cabrepublic.RoundedImageView
+                android:id="@+id/matchedProfilePicture"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                />
+
+            <TextView
+                android:id="@+id/matchedNameAndAge"
+                android:textSize="30sp"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+        </LinearLayout>
+
+        <TextView
+            android:textColor="#555454"
+            android:textSize="18sp"
+            android:text="Preferences"
+            android:paddingLeft="15dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:background="@drawable/bg_header_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/contactButton"
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/bg_button"
+            android:drawableRight="@drawable/ic_edit"
+            android:paddingLeft="30dp"
+            android:paddingRight="20dp"
+            android:drawablePadding="30dp"
+            android:gravity="center_vertical|right"
+            android:textSize="30sp"
+            />
+
+        <TextView
+            android:textColor="#555454"
+            android:textSize="18sp"
+            android:text="@string/header_name_of_pickup_map"
+            android:paddingLeft="15dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:background="@drawable/bg_header_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <fragment
+            android:id="@+id/pickUpLocationMap"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/nextButton"
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/bg_button"
+            android:text="Find someone to share"
+            android:gravity="center_horizontal|center_vertical"
+            android:textSize="25sp"
+            />
+    </LinearLayout>
+</FrameLayout>
