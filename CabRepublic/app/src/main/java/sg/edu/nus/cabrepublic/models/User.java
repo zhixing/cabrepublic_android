@@ -10,29 +10,32 @@ import java.io.Serializable;
  */
 public class User extends CRBaseModel implements Parcelable, Serializable {
 
-    public String email;
-    public String access_token;
-    public int age_min;
-    public int age_max;
-    public int gender;
-    public int age;
+    public String Email;
+    public String Access_token;
+    public int Age_min;
+    public int Age_max;
+    public int Gender;
+    public int Age;
+    public int Gender_preference;
 
-    public User(String email, String access_token, int age_min, int age_max, int gender, int age) {
-        this.email = email;
-        this.access_token = access_token;
-        this.age_min = age_min;
-        this.age_max = age_max;
-        this.gender = gender;
-        this.age = age;
+    public User(String email, String access_token, int age_min, int age_max, int gender, int age, int gender_preference) {
+        this.Email = email;
+        this.Access_token = access_token;
+        this.Age_min = age_min;
+        this.Age_max = age_max;
+        this.Gender = gender;
+        this.Age = age;
+        this.Gender_preference = gender_preference;
     }
 
     public User(Parcel parcel) {
-        this.email = parcel.readString();
-        this.access_token = parcel.readString();
-        this.age_min = parcel.readInt();
-        this.age_max = parcel.readInt();
-        this.gender = parcel.readInt();
-        this.age = parcel.readInt();
+        this.Email = parcel.readString();
+        this.Access_token = parcel.readString();
+        this.Age_min = parcel.readInt();
+        this.Age_max = parcel.readInt();
+        this.Gender = parcel.readInt();
+        this.Age = parcel.readInt();
+        this.Gender_preference = parcel.readInt();
     }
 
     @Override
@@ -42,11 +45,12 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(this.email);
-        parcel.writeString(this.access_token);
-        parcel.writeInt(this.age_min);
-        parcel.writeInt(this.age_max);
-        parcel.writeInt(this.gender);
-        parcel.writeInt(this.age);
+        parcel.writeString(this.Email);
+        parcel.writeString(this.Access_token);
+        parcel.writeInt(this.Age_min);
+        parcel.writeInt(this.Age_max);
+        parcel.writeInt(this.Gender);
+        parcel.writeInt(this.Age);
+        parcel.writeInt(this.Gender_preference);
     }
 }

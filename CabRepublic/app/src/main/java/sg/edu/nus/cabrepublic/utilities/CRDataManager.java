@@ -67,8 +67,8 @@ public class CRDataManager {
             @Override
             public void success(UserResponse user, Response response) {
                 completion.sendMessage(Message.obtain(null, 0, null));
-                currentUser = user.user;
-                currentUser.email = userEmail;
+                currentUser = user.User;
+                currentUser.Email = userEmail;
             }
 
             @Override
