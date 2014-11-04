@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2c2c2c"
+    tools:context=".MatchedInfoActivity"
+    tools:ignore="MergeRootFrame">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <sg.edu.nus.cabrepublic.RoundedImageView
+                android:id="@+id/matchedProfilePicture"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                />
+
+            <TextView
+                android:id="@+id/matchedNameAndAge"
+                android:textSize="30sp"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+        </LinearLayout>
+
+        <TextView
+            android:textColor="#555454"
+            android:textSize="18sp"
+            android:text="@string/header_name_of_contact"
+            android:paddingLeft="15dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:background="@drawable/bg_header_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/contactButton"
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/bg_button"
+            android:drawableLeft="@drawable/phone_icon"
+            android:paddingLeft="30dp"
+            android:drawablePadding="30dp"
+            android:gravity="left|center_vertical"
+            android:textSize="30sp"
+            />
+
+        <TextView
+            android:textColor="#555454"
+            android:textSize="18sp"
+            android:text="@string/header_name_of_pickup_map"
+            android:paddingLeft="15dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:background="@drawable/bg_header_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <fragment
+            android:id="@+id/pickUpLocationMap"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/nextButton"
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/bg_button"
+            android:text="Find a Cab"
+            android:gravity="center_horizontal|center_vertical"
+            android:textSize="30sp"
+            />
+    </LinearLayout>
+</FrameLayout>
