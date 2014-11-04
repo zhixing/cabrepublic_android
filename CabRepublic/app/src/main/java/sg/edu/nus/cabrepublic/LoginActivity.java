@@ -12,9 +12,9 @@ import android.view.View;
 import android.widget.*;
 import android.os.Handler;
 
-import sg.edu.nus.cabrepublic.requests.UserLoginRequest;
 import sg.edu.nus.cabrepublic.utilities.CRDataManager;
 import sg.edu.nus.cabrepublic.utilities.UserCredential;
+import sg.edu.nus.cabrepublic.utilities.ViewHelper;
 
 public class LoginActivity extends Activity {
 
@@ -44,14 +44,17 @@ public class LoginActivity extends Activity {
     }
 
     public void onLoginButtonClicked(View view){
-        EditText userEmail = (EditText) findViewById(R.id.email_address);
-        EditText userPassword = (EditText) findViewById(R.id.password);
+        EditText userEmailText = (EditText) findViewById(R.id.email_address);
+        EditText userPasswordText = (EditText) findViewById(R.id.password);
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(userEmail.getText()).matches()) {
+        String userEmail = userEmailText.getText().toString();
+        String userPassword = userPasswordText.getText().toString();
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
             showSignUpErrorMessage("Have you input the email correctly?");
-        } else if (userEmail.getText().toString().equals("")) {
+        } else if (userEmail.toString().equals("")) {
             showSignUpErrorMessage("Please input an email.");
-        } else if (userPassword.getText().toString().equals("")) {
+        } else if (userPassword.equals("")) {
             showSignUpErrorMessage("Please input a password.");
         } else {
 
@@ -62,18 +65,15 @@ public class LoginActivity extends Activity {
                         Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
                         intent.putExtra("ENTRANCE", 1);
                         intent.putExtra("NEW_USER", true);
-                        Toast toast = Toast.makeText(LoginActivity.this, "Successfully Logged in", Toast.LENGTH_LONG);
-                        toast.show();
+                        ViewHelper.getInstance().toastMessage(LoginActivity.this, "Successfully logged in");
                         startActivity(intent);
                     } else {
-                        Log.d("ERROR", "Login fail");
-                        //ViewHelper.getInstance().handleRequestFailure(LoginActivity.this, userMsg.what, (String) userMsg.obj);
+                        ViewHelper.getInstance().handleRequestFailure(LoginActivity.this, userMsg.what, (String) userMsg.obj);
                     }
-
                 }
             };
-            UserCredential credentials = new UserCredential(userEmail.getText().toString(), userPassword.getText().toString());
-            CRDataManager.getInstance().loginWithCompletion(credentials, loginHandler);
+
+            CRDataManager.getInstance().loginWithCompletion(userEmail, userPassword, loginHandler);
         }
     }
 

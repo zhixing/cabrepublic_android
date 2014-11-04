@@ -1,15 +1,18 @@
 package sg.edu.nus.cabrepublic.utilities;
 
 import retrofit.Callback;
-import retrofit.http.Body;
+import retrofit.http.Field;
+import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
-import sg.edu.nus.cabrepublic.requests.UserLoginRequest;
-import sg.edu.nus.cabrepublic.responses.UserResponse;
+import sg.edu.nus.cabrepublic.nework_data.UserResponse;
 
 /**
  * Created by zhixing on 14.11.04.
  */
 public interface CRService {
+    @FormUrlEncoded
     @POST("/users/signin")
-    void login(@Body UserCredential user, Callback<UserResponse> cb);
+    void login(@Field("email") String email,
+               @Field("password") String password,
+               Callback<UserResponse> cb);
 }

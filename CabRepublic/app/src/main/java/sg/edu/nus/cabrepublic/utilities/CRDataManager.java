@@ -1,8 +1,8 @@
 package sg.edu.nus.cabrepublic.utilities;
 
+import android.content.Context;
 import android.os.Message;
 import android.os.Handler;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,9 +13,10 @@ import retrofit.RetrofitError;
 import retrofit.android.AndroidLog;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
+import sg.edu.nus.cabrepublic.models.ErrorResponse;
+import sg.edu.nus.cabrepublic.models.RequestError;
 import sg.edu.nus.cabrepublic.models.User;
-import sg.edu.nus.cabrepublic.responses.UserResponse;
-import sg.edu.nus.cabrepublic.requests.UserLoginRequest;
+import sg.edu.nus.cabrepublic.nework_data.UserResponse;
 
 /**
  * Created by zhixing on 14.11.04.
@@ -60,25 +61,61 @@ public class CRDataManager {
         sharedManager = null;
     }
 
-    public void loginWithCompletion(UserCredential credentials, final Handler completion) {
+    public void loginWithCompletion(final String userEmail, String userPassword, final Handler completion) {
 
         Callback<UserResponse> callback = new Callback<UserResponse>() {
             @Override
             public void success(UserResponse user, Response response) {
                 completion.sendMessage(Message.obtain(null, 0, null));
                 currentUser = user.user;
+                currentUser.email = userEmail;
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.d("cat", "login fail");
-                //RequestError err = resolveRequestFailure(retrofitError);
-                //completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
+                RequestError err = resolveRequestFailure(retrofitError);
+                completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
             }
         };
-        crService.login(credentials, callback);
+        crService.login(userEmail, userPassword, callback);
     }
 
+    public void logout(Context context){
 
+    }
+
+    private RequestError resolveRequestFailure(RetrofitError retrofitError) {
+        try {
+            ErrorResponse resp = (ErrorResponse) retrofitError.getBodyAs(ErrorResponse.class);
+            if (resp != null) {
+                return new RequestError(REASONED_ERROR, resp.errors[0]);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (retrofitError.getResponse() != null) {
+            int responseCode = retrofitError.getResponse().getStatus();
+            switch (responseCode) {
+                case 401: {
+                    return new RequestError(UNAUTHORIZED);
+                }
+
+                case 404: {
+                    return new RequestError(NOT_FOUND);
+                }
+
+                case 500: {
+                    return new RequestError(INTERNAL_ERROR);
+                }
+
+                default: {
+                    return new RequestError(UNKNOWN);
+                }
+            }
+        } else {
+            return new RequestError(UNKNOWN);
+        }
+    }
 
 }

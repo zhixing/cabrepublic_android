@@ -5,7 +5,7 @@
     android:paddingBottom="16dp"
     android:paddingLeft="60dp"
     android:paddingRight="60dp"
-    android:paddingTop="150dp"
+    android:paddingTop="120dp"
     tools:context=".LoginActivity">
 
     <EditText
@@ -33,6 +33,6 @@
         android:layout_marginTop="30dp"
         android:onClick="onLoginButtonClicked"
         android:text="Login"
-        android:textColor="#FFFFFF" />
+        android:textColor="#000000" />
 
 </RelativeLayout>
