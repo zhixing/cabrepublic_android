@@ -1,4 +1,4 @@
-package sg.edu.nus.cabrepublic.responses;
+package sg.edu.nus.cabrepublic.nework_data;
 
 import sg.edu.nus.cabrepublic.models.User;
 
