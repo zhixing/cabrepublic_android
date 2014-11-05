@@ -43,7 +43,7 @@ public class RoundedImageView extends ImageView {
         if (getWidth() == 0 || getHeight() == 0) {
             return;
         }
-        Bitmap b =  ((BitmapDrawable)drawable).getBitmap() ;
+        Bitmap b = ((BitmapDrawable) drawable).getBitmap();
         Bitmap bitmap = b.copy(Bitmap.Config.ARGB_8888, true);
 
         int w = getWidth(), h = getHeight();
@@ -52,27 +52,26 @@ public class RoundedImageView extends ImageView {
         final Paint paint = new Paint();
         paint.setColor(Color.parseColor("#ffbb2a"));
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(w / 2+0.7f, w / 2+0.7f, w / 2f, paint);
+        canvas.drawCircle(w / 2 + 0.7f, w / 2 + 0.7f, w / 2f, paint);
 
-        Bitmap roundBitmap =  getCroppedBitmap(bitmap, w);
-        canvas.drawBitmap(roundBitmap, 0,0, null);
+        Bitmap roundBitmap = getCroppedBitmap(bitmap, w);
+        canvas.drawBitmap(roundBitmap, 0, 0, null);
     }
 
     public static Bitmap getCroppedBitmap(Bitmap bmp, int radius) {
         Bitmap sbmp;
 
-        int startPointOfCrop = (int)((bmp.getWidth()-(double)bmp.getHeight())/2);
+        int startPointOfCrop = (int) ((bmp.getWidth() - (double) bmp.getHeight()) / 2);
 
         sbmp = Bitmap.createBitmap(bmp, startPointOfCrop, 0, bmp.getHeight(), bmp.getHeight());
 
-        if(bmp.getWidth() != radius || bmp.getHeight() != radius) {
+        if (bmp.getWidth() != radius || bmp.getHeight() != radius) {
             sbmp = Bitmap.createScaledBitmap(sbmp, radius, radius, false);
-        }
-        else {
+        } else {
             sbmp = bmp;
         }
 
-        Bitmap output = Bitmap.createBitmap(radius,radius, Bitmap.Config.ARGB_8888);
+        Bitmap output = Bitmap.createBitmap(radius, radius, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
         final int color = 0xffa19774;
@@ -84,7 +83,7 @@ public class RoundedImageView extends ImageView {
         paint.setDither(true);
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(Color.parseColor("#BAB399"));
-        canvas.drawCircle(radius / 2+0.7f, radius / 2+0.7f, radius / 2-9f, paint);
+        canvas.drawCircle(radius / 2 + 0.7f, radius / 2 + 0.7f, radius / 2 - 9f, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(sbmp, rect, rect, paint);
 

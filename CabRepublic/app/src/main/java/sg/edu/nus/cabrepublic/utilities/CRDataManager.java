@@ -1,8 +1,8 @@
 package sg.edu.nus.cabrepublic.utilities;
 
 import android.content.Context;
-import android.os.Message;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -36,10 +36,13 @@ public class CRDataManager {
     public static final int NOT_FOUND = 5;
     public static final int UNKNOWN = 6;
 
+    public static final int GENDER_MALE = 0;
+    public static final int GENDER_FEMALE = 1;
+
     public User currentUser;
     private CRService crService;
 
-    private CRDataManager(){
+    private CRDataManager() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
 
@@ -70,6 +73,8 @@ public class CRDataManager {
                 completion.sendMessage(Message.obtain(null, 0, null));
                 currentUser = user.User;
                 currentUser.Email = userEmail;
+                currentUser.Name = "Worship Ancestor";
+                currentUser.Gender_preference = CRDataManager.getInstance().GENDER_FEMALE;
             }
 
             @Override
@@ -98,7 +103,7 @@ public class CRDataManager {
         crService.updatePreference(currentUser.Access_token, ageMin, ageMax, gender, callback);
     }
 
-    public void logout(Context context){
+    public void logout(Context context) {
 
     }
 

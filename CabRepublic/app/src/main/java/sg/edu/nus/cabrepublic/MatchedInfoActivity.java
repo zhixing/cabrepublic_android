@@ -18,7 +18,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 
@@ -88,7 +87,7 @@ public class MatchedInfoActivity extends Activity {
         profilePicture.setImageBitmap(profilePicBitmap);
     }
 
-    private void drawMarker(Location location){
+    private void drawMarker(Location location) {
         map.clear();
         //  convert the location object to a LatLng object that can be used by the map API
         LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
@@ -99,6 +98,6 @@ public class MatchedInfoActivity extends Activity {
         // add a marker to the map indicating our current position
         map.addMarker(new MarkerOptions()
                 .position(currentPosition)
-                .snippet("Lat:" + location.getLatitude() + "Lng:"+ location.getLongitude()));
+                .snippet("Lat:" + location.getLatitude() + "Lng:" + location.getLongitude()));
     }
 }

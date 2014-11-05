@@ -1,7 +1,6 @@
 package sg.edu.nus.cabrepublic;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,7 +14,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import sg.edu.nus.cabrepublic.utilities.CRDataManager;
-import sg.edu.nus.cabrepublic.utilities.ViewHelper;
 
 
 public class PreferenceActivity extends Activity {

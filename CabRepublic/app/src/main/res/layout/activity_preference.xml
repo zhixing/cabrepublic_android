@@ -73,7 +73,7 @@
             android:id="@+id/gender_preference"
             android:layout_below="@+id/max_age"
             android:layout_alignBaseline="@+id/gender_preference_title"
-            android:layout_marginLeft="140dp"/>
+            android:layout_marginLeft="140dp" />
 
         <Button
             android:id="@+id/confirm_signup"
