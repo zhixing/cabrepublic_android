@@ -25,6 +25,7 @@ public class HomePageActivity extends Activity {
     private RoundedImageView profilePicture;
     private TextView userName;
     private Button preferenceButton;
+    private Button onpickUpLocationEditButton;
     private Button initializeShareButton;
 
     private CRDataManager crDataManager;
@@ -38,6 +39,7 @@ public class HomePageActivity extends Activity {
         userName = (TextView) findViewById(R.id.userName);
         preferenceButton = (Button) findViewById(R.id.preferenceButton);
         initializeShareButton = (Button) findViewById(R.id.initializeShareButton);
+        onpickUpLocationEditButton = (Button)findViewById(R.id.pickUpLocationEditButton);
 
         crDataManager = CRDataManager.getInstance();
 
@@ -60,6 +62,8 @@ public class HomePageActivity extends Activity {
         preferenceString += "Age between " + crDataManager.currentUser.Age_min + " and " + crDataManager.currentUser.Age_max;
 
         preferenceButton.setText(preferenceString);
+
+        onpickUpLocationEditButton.setText(CRDataManager.getInstance().getPickUpLocations().get(0).locationName);
 
         // Set the profile image:
         int resourceID;
@@ -106,6 +110,11 @@ public class HomePageActivity extends Activity {
 
     public void onPreferenceClicked(View v) {
         Intent intent = new Intent(HomePageActivity.this, PreferenceActivity.class);
+        startActivity(intent);
+    }
+
+    public void onpickUpLocationEditButtonClicked(View v){
+        Intent intent = new Intent(HomePageActivity.this, PickUpLocationListActivity.class);
         startActivity(intent);
     }
 }

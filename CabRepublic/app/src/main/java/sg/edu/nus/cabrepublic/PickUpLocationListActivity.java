@@ -21,13 +21,14 @@ import sg.edu.nus.cabrepublic.utilities.CRDataManager;
 
 public class PickUpLocationListActivity extends Activity {
     private PickUpLocationAdapter pickUpLocationAdapter;
-    private ListView pickUpLocationListView = (ListView) findViewById(R.id.pick_up_location_list_view);
-
+    private ListView pickUpLocationListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_up_location_list);
+
+        pickUpLocationListView = (ListView) findViewById(R.id.pick_up_location_list_view);
 
         ArrayList<PickUpLocation> locations = CRDataManager.getInstance().getPickUpLocations();
         pickUpLocationAdapter = new PickUpLocationAdapter(PickUpLocationListActivity.this, locations);
@@ -37,7 +38,6 @@ public class PickUpLocationListActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Log.d("Cat", "Item clicked");
                 //intent.putExtra("topic", (Parcelable) adapterView.getItemAtPosition(i));
-
             }
         });
     }
@@ -61,4 +61,6 @@ public class PickUpLocationListActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

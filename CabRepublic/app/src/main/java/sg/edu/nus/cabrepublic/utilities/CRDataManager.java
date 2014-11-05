@@ -147,9 +147,9 @@ public class CRDataManager {
 
     public ArrayList<PickUpLocation> getPickUpLocations(){
         ArrayList<PickUpLocation> pickUpLocations = new ArrayList<PickUpLocation>();
+        pickUpLocations.add(new PickUpLocation("Computer Center", 103.772808, 1.297348));
         pickUpLocations.add(new PickUpLocation("COM1", 103.773593, 1.294796));
         pickUpLocations.add(new PickUpLocation("Central Library", 103.772475, 1.296619));
-        pickUpLocations.add(new PickUpLocation("Computer Center", 103.772808, 1.297348));
         pickUpLocations.add(new PickUpLocation("Raffles Hall", 103.774309, 1.299139));
         pickUpLocations.add(new PickUpLocation("UCC", 103.771632, 1.301236));
         pickUpLocations.add(new PickUpLocation("Utown", 103.774325, 1.303548));
