@@ -8,6 +8,9 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -15,6 +18,7 @@ import retrofit.android.AndroidLog;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import sg.edu.nus.cabrepublic.models.ErrorResponse;
+import sg.edu.nus.cabrepublic.models.PickUpLocation;
 import sg.edu.nus.cabrepublic.models.RequestError;
 import sg.edu.nus.cabrepublic.models.User;
 import sg.edu.nus.cabrepublic.nework_data.UserResponse;
@@ -141,4 +145,25 @@ public class CRDataManager {
         }
     }
 
+    public ArrayList<PickUpLocation> getPickUpLocations(){
+        ArrayList<PickUpLocation> pickUpLocations = new ArrayList<PickUpLocation>();
+        pickUpLocations.add(new PickUpLocation("COM1", 103.773593, 1.294796));
+        pickUpLocations.add(new PickUpLocation("Central Library", 103.772475, 1.296619));
+        pickUpLocations.add(new PickUpLocation("Computer Center", 103.772808, 1.297348));
+        pickUpLocations.add(new PickUpLocation("Raffles Hall", 103.774309, 1.299139));
+        pickUpLocations.add(new PickUpLocation("UCC", 103.771632, 1.301236));
+        pickUpLocations.add(new PickUpLocation("Utown", 103.774325, 1.303548));
+        pickUpLocations.add(new PickUpLocation("UHC", 103.776246, 1.298882));
+        pickUpLocations.add(new PickUpLocation("University Hall", 103.778032, 1.29753));
+        pickUpLocations.add(new PickUpLocation("Faculty of Science", 103.78072, 1.297402));
+        pickUpLocations.add(new PickUpLocation("Faculty of Dentistry", 103.782045, 1.297064));
+        pickUpLocations.add(new PickUpLocation("NUH", 103.784904, 1.293814));
+        pickUpLocations.add(new PickUpLocation("PGP", 103.781202, 1.290945));
+        pickUpLocations.add(new PickUpLocation("Temasek Life Sciences Lab", 103.776675, 1.293803));
+        pickUpLocations.add(new PickUpLocation("Business School", 103.773971, 1.292275));
+        pickUpLocations.add(new PickUpLocation("Shears Hall", 103.775409, 1.291803));
+        pickUpLocations.add(new PickUpLocation("Temasek Hall", 103.771761, 1.293101));
+
+        return pickUpLocations;
+    }
 }

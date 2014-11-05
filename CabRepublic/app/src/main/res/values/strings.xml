@@ -17,5 +17,6 @@
         <item>Female Only</item>
     </string-array>
 
+    <string name="title_activity_pick_up_location_list">PickUpLocationListActivity</string>
 
 </resources>

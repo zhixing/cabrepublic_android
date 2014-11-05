@@ -56,7 +56,8 @@
             android:paddingRight="20dp"
             android:drawablePadding="30dp"
             android:gravity="right|center_vertical"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:onClick="onPreferenceClicked"/>
 
         <TextView
             android:textColor="#555454"
