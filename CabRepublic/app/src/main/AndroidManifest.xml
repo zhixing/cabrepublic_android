@@ -39,7 +39,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="sg.edu.nus.cabrepublic.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,7 +48,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="sg.edu.nus.cabrepublic.HomePageActivity"
+            android:name=".HomePageActivity"
             android:label="@string/title_activity_home_page" >
         </activity>
 
@@ -60,12 +60,16 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="sg.edu.nus.cabrepublic.MatchedInfoActivity"
+            android:name=".MatchedInfoActivity"
             android:label="@string/title_activity_matched_info" >
         </activity>
         <activity
-            android:name="sg.edu.nus.cabrepublic.matchingProcessActivity"
+            android:name=".matchingProcessActivity"
             android:label="@string/title_activity_matching_process" >
+        </activity>
+        <activity
+            android:name=".PreferenceActivity"
+            android:label="@string/title_activity_preference" >
         </activity>
     </application>
 

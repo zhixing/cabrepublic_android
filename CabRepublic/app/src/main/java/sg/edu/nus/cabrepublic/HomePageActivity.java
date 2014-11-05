@@ -1,9 +1,13 @@
 package sg.edu.nus.cabrepublic;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import sg.edu.nus.cabrepublic.utilities.ViewHelper;
 
 
 public class HomePageActivity extends Activity {
@@ -32,5 +36,10 @@ public class HomePageActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onPreferenceClicked(View v) {
+        Intent intent = new Intent(HomePageActivity.this, PreferenceActivity.class);
+        startActivity(intent);
     }
 }

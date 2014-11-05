@@ -9,5 +9,13 @@
     <string name="header_name_of_contact">Contact Information</string>
     <string name="header_name_of_pickup_map">Pick Up Location</string>
     <string name="title_activity_matching_process">matchingProcessActivity</string>
+    <string name="title_activity_preference">PreferenceActivity</string>
+
+    <string-array name="gender_preference_array">
+        <item>Don\'t Care</item>
+        <item>Male Only</item>
+        <item>Female Only</item>
+    </string-array>
+
 
 </resources>

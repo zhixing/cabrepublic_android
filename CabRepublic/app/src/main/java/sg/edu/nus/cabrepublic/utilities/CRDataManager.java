@@ -3,6 +3,7 @@ package sg.edu.nus.cabrepublic.utilities;
 import android.content.Context;
 import android.os.Message;
 import android.os.Handler;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -78,6 +79,23 @@ public class CRDataManager {
             }
         };
         crService.login(userEmail, userPassword, callback);
+    }
+
+    public void updatePreferenceWithCompletion(int ageMin, int ageMax, int gender, final Handler completion) {
+        Callback<Object> callback = new Callback<Object>() {
+            @Override
+            public void success(Object user, Response response) {
+                completion.sendMessage(Message.obtain(null, 0, null));
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                RequestError err = resolveRequestFailure(retrofitError);
+                completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
+            }
+        };
+        Log.d("cabrepublic", "Access token is " + currentUser.Access_token);
+        crService.updatePreference(currentUser.Access_token, ageMin, ageMax, gender, callback);
     }
 
     public void logout(Context context){
