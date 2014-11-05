@@ -70,8 +70,10 @@
             android:label="@string/title_activity_preference" />
         <activity
             android:name=".PickUpLocationListActivity"
-            android:label="@string/title_activity_pick_up_location_list" >
-        </activity>
+            android:label="@string/title_activity_pick_up_location_list" />
+        <activity
+            android:name=".SettingActivity"
+            android:label="@string/title_activity_setting" />
     </application>
 
 </manifest>
