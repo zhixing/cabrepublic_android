@@ -17,5 +17,11 @@
         <item>Female Only</item>
     </string-array>
 
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string name="title_activity_setting">SettingActivity</string>
 
 </resources>
