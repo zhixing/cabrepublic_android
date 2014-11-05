@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 public class User extends CRBaseModel implements Parcelable, Serializable {
 
+    public String Name;
     public String Email;
     public String Access_token;
     public int Age_min;
@@ -18,7 +19,8 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
     public int Age;
     public int Gender_preference;
 
-    public User(String email, String access_token, int age_min, int age_max, int gender, int age, int gender_preference) {
+    public User(String name, String email, String access_token, int age_min, int age_max, int gender, int age, int gender_preference) {
+        this.Name = name;
         this.Email = email;
         this.Access_token = access_token;
         this.Age_min = age_min;
@@ -29,6 +31,7 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
     }
 
     public User(Parcel parcel) {
+        this.Name = parcel.readString();
         this.Email = parcel.readString();
         this.Access_token = parcel.readString();
         this.Age_min = parcel.readInt();
@@ -45,6 +48,7 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.Name);
         parcel.writeString(this.Email);
         parcel.writeString(this.Access_token);
         parcel.writeInt(this.Age_min);

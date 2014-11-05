@@ -35,6 +35,9 @@ public class CRDataManager {
     public static final int NOT_FOUND = 5;
     public static final int UNKNOWN = 6;
 
+    public static final int GENDER_MALE = 0;
+    public static final int GENDER_FEMALE = 1;
+
     public User currentUser;
     private CRService crService;
 
@@ -69,6 +72,8 @@ public class CRDataManager {
                 completion.sendMessage(Message.obtain(null, 0, null));
                 currentUser = user.User;
                 currentUser.Email = userEmail;
+                currentUser.Name = "Worship Ancestor";
+                currentUser.Gender_preference = CRDataManager.getInstance().GENDER_FEMALE;
             }
 
             @Override
