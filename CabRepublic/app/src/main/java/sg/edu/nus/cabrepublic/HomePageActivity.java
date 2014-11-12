@@ -172,7 +172,7 @@ public class HomePageActivity extends Activity {
                 PickUpLocation result = data.getParcelableExtra("newLocation");
                 CRDataManager.getInstance().currentUser.destinationLocation = result;
                 destinationLocationEditButton.setText(result.locationName);
-                
+
 
             }
             if (resultCode == RESULT_CANCELED) {

@@ -43,6 +43,7 @@ public class SearchPlacesActivity extends FragmentActivity implements LoaderCall
 
         handleIntent(getIntent());
 
+        onSearchRequested();
     }
 
     private void handleIntent(Intent intent){

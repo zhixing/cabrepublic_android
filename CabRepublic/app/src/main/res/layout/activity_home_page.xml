@@ -49,7 +49,7 @@
         <Button
             android:id="@+id/preferenceButton"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_button"
             android:drawableRight="@drawable/ic_edit"
             android:paddingLeft="30dp"
@@ -73,7 +73,7 @@
         <Button
             android:id="@+id/pickUpLocationEditButton"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_button"
             android:drawableRight="@drawable/ic_edit"
             android:paddingLeft="30dp"
@@ -97,7 +97,7 @@
         <Button
             android:id="@+id/destinationEditButton"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_button"
             android:drawableRight="@drawable/ic_edit"
             android:paddingLeft="30dp"
