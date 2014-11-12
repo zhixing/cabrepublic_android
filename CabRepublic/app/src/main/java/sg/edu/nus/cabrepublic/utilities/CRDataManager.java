@@ -1,11 +1,15 @@
 package sg.edu.nus.cabrepublic.utilities;
 
 import android.content.Context;
-import android.os.Message;
 import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -14,6 +18,9 @@ import retrofit.android.AndroidLog;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import sg.edu.nus.cabrepublic.models.ErrorResponse;
+import sg.edu.nus.cabrepublic.models.FindMatchResponse;
+import sg.edu.nus.cabrepublic.models.MatchPollResponse;
+import sg.edu.nus.cabrepublic.models.PickUpLocation;
 import sg.edu.nus.cabrepublic.models.RequestError;
 import sg.edu.nus.cabrepublic.models.User;
 import sg.edu.nus.cabrepublic.nework_data.UserResponse;
@@ -35,10 +42,13 @@ public class CRDataManager {
     public static final int NOT_FOUND = 5;
     public static final int UNKNOWN = 6;
 
+    public static final int GENDER_MALE = 0;
+    public static final int GENDER_FEMALE = 1;
+
     public User currentUser;
     private CRService crService;
 
-    private CRDataManager(){
+    private CRDataManager() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
 
@@ -67,8 +77,12 @@ public class CRDataManager {
             @Override
             public void success(UserResponse user, Response response) {
                 completion.sendMessage(Message.obtain(null, 0, null));
-                currentUser = user.user;
-                currentUser.email = userEmail;
+                currentUser = user.User;
+                currentUser.Email = userEmail;
+
+                // TODO: these should be retrieved from coalition server or GPS:
+                currentUser.Name = "Peter Lim";
+                currentUser.pickUpLocation = CRDataManager.getInstance().getPickUpLocations().get(0);
             }
 
             @Override
@@ -80,7 +94,93 @@ public class CRDataManager {
         crService.login(userEmail, userPassword, callback);
     }
 
-    public void logout(Context context){
+    public void updatePreferenceWithCompletion(int ageMin, int ageMax, int gender, final Handler completion) {
+        Callback<Object> callback = new Callback<Object>() {
+            @Override
+            public void success(Object user, Response response) {
+                completion.sendMessage(Message.obtain(null, 0, null));
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                RequestError err = resolveRequestFailure(retrofitError);
+                completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
+            }
+        };
+        Log.d("cabrepublic", "Access token is " + currentUser.Access_token);
+        crService.updatePreference(currentUser.Access_token, ageMin, ageMax, gender, callback);
+    }
+
+    public void pollMatchStatusWithCompletion(final Handler completion) {
+        Callback<MatchPollResponse> callback = new Callback<MatchPollResponse>() {
+            @Override
+            public void success(MatchPollResponse matchPollResponse, Response response) {
+                completion.sendMessage(Message.obtain(null, 0, matchPollResponse.Email));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                RequestError err = resolveRequestFailure(error);
+                completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
+
+            }
+        };
+        crService.pollMatchingStatus(currentUser.Access_token, callback);
+    }
+
+    public void deleteMatchingWithCompletion(final Handler completion) {
+        Callback<Object> callback = new Callback<Object>() {
+            @Override
+            public void success(Object deleteResponse, Response response) {
+                completion.sendMessage(Message.obtain(null, 0, null));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                RequestError err = resolveRequestFailure(error);
+                completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
+
+            }
+        };
+        crService.deleteMatching(currentUser.Access_token, callback);
+    }
+
+    public void createIntentionWithCompletion(double lon, double lat, final Handler completion) {
+        Callback<Object> callback = new Callback<Object>() {
+            @Override
+            public void success(Object createResponse, Response response) {
+                completion.sendMessage(Message.obtain(null, 0, null));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                RequestError err = resolveRequestFailure(error);
+                completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
+
+            }
+        };
+
+        crService.createIntention(currentUser.Access_token, lat, lon, callback);
+    }
+
+    public void findMatchingWithCompletion(String[] emails, final Handler completion) {
+        Callback<FindMatchResponse> callback = new Callback<FindMatchResponse>() {
+            @Override
+            public void success(FindMatchResponse findMatchResponse, Response response) {
+                completion.sendMessage(Message.obtain(null, 0, findMatchResponse));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                RequestError err = resolveRequestFailure(error);
+                completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
+
+            }
+        };
+        crService.findMatching(currentUser.Access_token, strJoin(emails, "$"), callback);
+    }
+
+    public void logout(Context context) {
 
     }
 
@@ -118,4 +218,35 @@ public class CRDataManager {
         }
     }
 
+    public ArrayList<PickUpLocation> getPickUpLocations(){
+        ArrayList<PickUpLocation> pickUpLocations = new ArrayList<PickUpLocation>();
+        pickUpLocations.add(new PickUpLocation("Computer Center", 103.772808, 1.297348));
+        pickUpLocations.add(new PickUpLocation("COM1", 103.773593, 1.294796));
+        pickUpLocations.add(new PickUpLocation("Central Library", 103.772475, 1.296619));
+        pickUpLocations.add(new PickUpLocation("Raffles Hall", 103.774309, 1.299139));
+        pickUpLocations.add(new PickUpLocation("UCC", 103.771632, 1.301236));
+        pickUpLocations.add(new PickUpLocation("Utown", 103.774325, 1.303548));
+        pickUpLocations.add(new PickUpLocation("UHC", 103.776246, 1.298882));
+        pickUpLocations.add(new PickUpLocation("University Hall", 103.778032, 1.29753));
+        pickUpLocations.add(new PickUpLocation("Faculty of Science", 103.78072, 1.297402));
+        pickUpLocations.add(new PickUpLocation("Faculty of Dentistry", 103.782045, 1.297064));
+        pickUpLocations.add(new PickUpLocation("NUH", 103.784904, 1.293814));
+        pickUpLocations.add(new PickUpLocation("PGP", 103.781202, 1.290945));
+        pickUpLocations.add(new PickUpLocation("Temasek Life Sciences Lab", 103.776675, 1.293803));
+        pickUpLocations.add(new PickUpLocation("Business School", 103.773971, 1.292275));
+        pickUpLocations.add(new PickUpLocation("Shears Hall", 103.775409, 1.291803));
+        pickUpLocations.add(new PickUpLocation("Temasek Hall", 103.771761, 1.293101));
+
+        return pickUpLocations;
+    }
+
+    public String strJoin(String[] aArr, String sSep) {
+        StringBuilder sbStr = new StringBuilder();
+        for (int i = 0, il = aArr.length; i < il; i++) {
+            if (i > 0)
+                sbStr.append(sSep);
+            sbStr.append(aArr[i]);
+        }
+        return sbStr.toString();
+    }
 }

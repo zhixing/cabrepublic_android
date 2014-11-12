@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">CabUnited</string>
+    <string name="app_name">Cab Republic</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_home_page">HomePage</string>
+    <string name="title_activity_home_page">Welcome</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_matched_info">MatchedInfoActivity</string>
+    <string name="title_activity_matched_info">Matched Info</string>
     <string name="header_name_of_contact">Contact Information</string>
-    <string name="header_name_of_pickup_map">Pick Up Location</string>
+    <string name="header_name_of_pickup_map">From:</string>
+    <string name="header_name_of_edstination_map">To:</string>
     <string name="title_activity_matching_process">matchingProcessActivity</string>
+    <string name="title_activity_preference">Preference for sharing a cab</string>
+    <string name="title_activity_setting">Settings</string>
+    <string name="title_activity_pick_up_location_list">Pick Up Locations Nearby</string>
+    <string name="search_hint">Search Places</string>
+    <string name="search_settings">Search Places</string>
+    <string name="action_search">Search</string>
+
+    <string-array name="gender_preference_array">
+        <item>Don\'t Care</item>
+        <item>Male Only</item>
+        <item>Female Only</item>
+    </string-array>
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string name="title_activity_taxi_home">TaxiHomeActivity</string>
+    <string name="title_activity_search_places">SearchPlacesActivity</string>
 
 </resources>

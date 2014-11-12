@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import sg.edu.nus.cabrepublic.LoginActivity;
-import sg.edu.nus.cabrepublic.R;
 
 /**
  * Created by zhixing on 14.11.04.

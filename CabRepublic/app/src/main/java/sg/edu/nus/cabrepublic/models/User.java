@@ -10,29 +10,49 @@ import java.io.Serializable;
  */
 public class User extends CRBaseModel implements Parcelable, Serializable {
 
-    public String email;
-    public String access_token;
-    public int age_min;
-    public int age_max;
-    public int gender;
-    public int age;
+    // Stored locally:
+    public int Gender;
+    public int Age;
+    public String Name;
+    public String Email;
 
-    public User(String email, String access_token, int age_min, int age_max, int gender, int age) {
-        this.email = email;
-        this.access_token = access_token;
-        this.age_min = age_min;
-        this.age_max = age_max;
-        this.gender = gender;
-        this.age = age;
+    // Inferred each time:
+    public PickUpLocation pickUpLocation;
+    public PickUpLocation destinationLocation;
+
+    // Data returned by the server:
+    public int Age_min;
+    public int Age_max;
+    public int Gender_preference;
+    public int Type; // (0 for ordinary user, 1 for taxi driver)
+    public String Access_token;
+
+    public User(String name, String email, String access_token, int age_min, int age_max, int gender, int age,
+                int gender_preference, PickUpLocation pickUpLocation, int type) {
+        this.Name = name;
+        this.Email = email;
+        this.Access_token = access_token;
+        this.Age_min = age_min;
+        this.Age_max = age_max;
+        this.Gender = gender;
+        this.Age = age;
+        this.Gender_preference = gender_preference;
+        this.pickUpLocation = pickUpLocation;
+        this.Type = type;
     }
 
     public User(Parcel parcel) {
-        this.email = parcel.readString();
-        this.access_token = parcel.readString();
-        this.age_min = parcel.readInt();
-        this.age_max = parcel.readInt();
-        this.gender = parcel.readInt();
-        this.age = parcel.readInt();
+        this.Name = parcel.readString();
+        this.Email = parcel.readString();
+        this.Access_token = parcel.readString();
+        this.Age_min = parcel.readInt();
+        this.Age_max = parcel.readInt();
+        this.Gender = parcel.readInt();
+        this.Age = parcel.readInt();
+        this.Gender_preference = parcel.readInt();
+        this.pickUpLocation = parcel.readParcelable(PickUpLocation.class.getClassLoader());
+        this.destinationLocation = parcel.readParcelable(PickUpLocation.class.getClassLoader());
+        this.Type = parcel.readInt();
     }
 
     @Override
@@ -42,11 +62,16 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(this.email);
-        parcel.writeString(this.access_token);
-        parcel.writeInt(this.age_min);
-        parcel.writeInt(this.age_max);
-        parcel.writeInt(this.gender);
-        parcel.writeInt(this.age);
+        parcel.writeString(this.Name);
+        parcel.writeString(this.Email);
+        parcel.writeString(this.Access_token);
+        parcel.writeInt(this.Age_min);
+        parcel.writeInt(this.Age_max);
+        parcel.writeInt(this.Gender);
+        parcel.writeInt(this.Age);
+        parcel.writeInt(this.Gender_preference);
+        parcel.writeParcelable(this.pickUpLocation, 1);
+        parcel.writeParcelable(this.destinationLocation, 1);
+        parcel.writeInt(this.Type);
     }
 }

@@ -1,70 +1,145 @@
 package sg.edu.nus.cabrepublic;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.CountDownTimer;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.HashMap;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-import sg.edu.nus.cabrepublic.mobile_psg.mpsgStarter.MPSG;
-import sg.edu.nus.cabrepublic.mobile_psg.mpsgStarter.MpsgStarter;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+
+import sg.edu.nus.cabrepublic.models.PickUpLocation;
+import sg.edu.nus.cabrepublic.models.User;
+import sg.edu.nus.cabrepublic.utilities.CRDataManager;
+import sg.edu.nus.cabrepublic.utilities.ViewHelper;
 
 
 public class HomePageActivity extends Activity {
-    public static String mpsgName = "MPSGSathiya3";
-    public static String StaticContextData = "person.name::qingcheng,person.preference::pc,person.location::ion,person.isBusy::yes,person.speed::nil,person.action::eating,person.power::low,person.mood::happy,person.acceleration::nil,person.gravity::nil,person.magnetism::nil";
-    public static String ContextType = "PERSON";
-    public static String query = "select person.name,person.gravity,person.preference from person where person.isBusy = \"yes\"";
-    public MpsgStarter mpsgStarter;
-    public Handler handler;
-    private String result;
+    private GoogleMap map;
+    private RoundedImageView profilePicture;
+    private TextView userName;
+    private Button preferenceButton;
+    private Button onpickUpLocationEditButton;
+    private Button initializeShareButton;
+    private Button destinationLocationEditButton;
+
+    // At bottom:
+    private LinearLayout buttonsHolder;
+    private ImageButton cancelButton;
+    private TextView countDownTextView;
+
+    // Utility:
+    private CountDownTimer countDownTimer;
+    private Timer pollCoalitionForMathTimer;
+
+    private CRDataManager crDataManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        mpsgStarter = new MpsgStarter(this);
-        mpsgStarter.initializeMPSG(mpsgName, StaticContextData, ContextType);
-        handler = new Handler() {
-            public void handleMessage(Message msg) {
-                final int what = msg.what;
-                if (what == 0) {
-                    HashMap<String, HashMap<String, String>> result = (HashMap<String, HashMap<String, String>>) msg.obj;
+        profilePicture = (RoundedImageView) findViewById(R.id.profilePicture);
+        userName = (TextView) findViewById(R.id.userName);
+        preferenceButton = (Button) findViewById(R.id.preferenceButton);
+        initializeShareButton = (Button) findViewById(R.id.initializeShareButton);
+        onpickUpLocationEditButton = (Button)findViewById(R.id.pickUpLocationEditButton);
+        destinationLocationEditButton = (Button)findViewById(R.id.destinationEditButton);
 
-                    StringBuilder sb = new StringBuilder();
-                    for (String key : result.keySet()) {
-                        sb.append(key + " ");
-                        sb.append((result.get(key)).get("person.preference"));
-                        sb.append("\n");
-                    }
+        cancelButton = (ImageButton)findViewById(R.id.cancelButton);
+        countDownTimer = null;
+        countDownTextView = (TextView)findViewById(R.id.countDownTextView);
+        buttonsHolder = (LinearLayout)findViewById(R.id.buttonsholder);
 
-                    updateTextView(sb.toString());
-                }
-            }
-        };
+        // To be hidden:
+        cancelButton.setVisibility(View.INVISIBLE);
+        countDownTextView.setVisibility(View.INVISIBLE);
+        buttonsHolder.setVisibility(View.INVISIBLE);
 
-//        Intent intent = new Intent(this, MatchedInfoActivity.class);
-//        intent.putExtra("name", "Shi Yu");
-//        intent.putExtra("age", "24");
-//        intent.putExtra("handphoneNumber", "+65 81869565");
-//        intent.putExtra("urlOfProfilePicture", "http://justinjackson.ca/wp-content/uploads/2008/08/justin-jackson-black-and-white-canada-profile.jpg");
-//        startActivity(intent);
+        crDataManager = CRDataManager.getInstance();
+
+        initializeGoogleMap();
+        setUserNameAndProfileImage();
+        setLocationAndPreferenceTexts();
     }
 
-    public void updateTextView(String text) {
-        TextView textView = (TextView) findViewById(R.id.resultTextView);
-        textView.setText(text);
+    private void initializeGoogleMap(){
+        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.pickUpLocationMap)).getMap();
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map.setMyLocationEnabled(true);
+        centerMapOnMyLocation();
     }
 
-    public void sendQuery(View view) {
-        mpsgStarter.sendQuery(query, handler);
+    private void setUserNameAndProfileImage(){
+        userName.setText(crDataManager.currentUser.Name);
+
+        // Set the profile image:
+        int resourceID;
+        if (crDataManager.currentUser.Gender == crDataManager.GENDER_FEMALE) {
+            resourceID = R.drawable.ic_female;
+        } else {
+            resourceID = R.drawable.ic_male;
+        }
+        Bitmap profileImageBitmap = BitmapFactory.decodeResource(getResources(), resourceID);
+        profilePicture.setImageBitmap(profileImageBitmap);
+    }
+
+    private void setLocationAndPreferenceTexts(){
+
+        String preferenceString = "";
+        if (crDataManager.currentUser.Gender_preference == crDataManager.GENDER_FEMALE) {
+            preferenceString += "Male. ";
+        } else if (crDataManager.currentUser.Gender_preference == crDataManager.GENDER_MALE) {
+            preferenceString += "Female. ";
+        }
+
+        preferenceString += "Age between " + crDataManager.currentUser.Age_min + " and " + crDataManager.currentUser.Age_max;
+
+        preferenceButton.setText(preferenceString);
+
+        onpickUpLocationEditButton.setText(CRDataManager.getInstance().currentUser.pickUpLocation.locationName);
+
+        destinationLocationEditButton.setText("Please Select");
+        CRDataManager.getInstance().currentUser.destinationLocation = null;
+    }
+
+    private void centerMapOnMyLocation() {
+
+        map.setMyLocationEnabled(true);
+
+        Location location = map.getMyLocation();
+        LatLng myLocation = new LatLng(1.297402, 103.78072);
+
+        if (location != null) {
+            myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        }
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 13.0));
+
+        drawStartAndEndMarkers();
     }
 
     @Override
@@ -81,8 +156,192 @@ public class HomePageActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(HomePageActivity.this, SettingActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_search){
+            Intent intent = new Intent(HomePageActivity.this, SearchPlacesActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onPreferenceClicked(View v) {
+        Intent intent = new Intent(HomePageActivity.this, PreferenceActivity.class);
+        startActivity(intent);
+    }
+
+    public void onPickUpLocationEditButtonClicked(View v){
+        Intent intent = new Intent(HomePageActivity.this, PickUpLocationListActivity.class);
+        startActivityForResult(intent, 1);
+    }
+
+    public void onDestinationButtonClicked(View v){
+        Intent intent = new Intent(HomePageActivity.this, SearchPlacesActivity.class);
+        intent.setAction(Intent.ACTION_SEARCH);
+        intent.putExtra(SearchManager.QUERY, "Prince George's Park Singapore");
+        startActivityForResult(intent, 2);
+    }
+
+    public void onStartSharingButtonClicked(View v){
+        User currentUser = CRDataManager.getInstance().currentUser;
+        if (currentUser.destinationLocation == null){
+            ViewHelper.getInstance().toastMessage(HomePageActivity.this, "Please select your destination.");
+        } else {
+
+            // Create an intention and send to server:
+            android.os.Handler startIntentionHandler = new android.os.Handler() {
+                @Override
+                public void handleMessage(Message userMsg) {
+                    if (userMsg.what == 0) {
+
+                        // Show the timer:
+                        buttonsHolder.setVisibility(View.VISIBLE);
+                        cancelButton.setVisibility(View.VISIBLE);
+                        countDownTextView.setVisibility(View.VISIBLE);
+                        countDownTimer = initializeCountDownTextView();
+
+                        pollCoalitionForMathTimer = new Timer();
+                        pollCoalitionForMathTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                queryCoalitionServerForMatch();
+                            }
+                        }, 0, 5000);
+
+                    } else {
+                        ViewHelper.getInstance().handleRequestFailure(HomePageActivity.this, userMsg.what, (String) userMsg.obj);
+                    }
+                }
+            };
+
+            CRDataManager.getInstance().createIntentionWithCompletion(
+                    currentUser.pickUpLocation.longitude,
+                    currentUser.pickUpLocation.latitude, startIntentionHandler);
+        }
+    }
+
+    public void cancelButtonPressed(View v){
+        // Delete the intention from the server:
+        // Create an intention and send to server:
+        android.os.Handler deleteMatchHandler = new android.os.Handler() {
+            @Override
+            public void handleMessage(Message userMsg) {
+                if (userMsg.what == 0) {
+
+                    pollCoalitionForMathTimer.cancel();
+                    cancelButton.setVisibility(View.INVISIBLE);
+                    countDownTextView.setVisibility(View.INVISIBLE);
+                    buttonsHolder.setVisibility(View.INVISIBLE);
+
+                } else {
+                    ViewHelper.getInstance().handleRequestFailure(HomePageActivity.this, userMsg.what, (String) userMsg.obj);
+                }
+            }
+        };
+
+        CRDataManager.getInstance().deleteMatchingWithCompletion(deleteMatchHandler);
+    }
+
+    private void queryCoalitionServerForMatch(){
+        // Query the coalition server for a few potential email addresses that fits my preference:
+
+        // If Found:
+        //pollCoalitionForMathTimer.cancel();
+        //Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
+        //startActivity(intent);
+    }
+
+    private CountDownTimer initializeCountDownTextView() {
+        countDownTextView = (TextView) findViewById(R.id.countDownTextView);
+        final CountDownTimer countDownTimer = new CountDownTimer(10000, 1000) {
+            int numberOfDots = 0;
+            public void onTick(long millisUntilFinished) {
+                //countDownTextView.setText("seconds remaining: " + millisUntilFinished / 1000);
+                long secondsRemaining = millisUntilFinished/1000;
+                String mins = "" + secondsRemaining/60;
+                String secs = "" + secondsRemaining%60;
+
+                if (secs.length() < 2) {
+                    secs = "0" + secs;
+                }
+
+                StringBuilder sb = new StringBuilder();
+                sb.append("Finding a match");
+                for (int i = 0; i < numberOfDots; ++i) {
+                    sb.append(".");
+                }
+                for (int i = 0; i < 3-numberOfDots; ++i) {
+                    sb.append(" ");
+                }
+                sb.append("(" + mins + ":" + secs + ")");
+                countDownTextView.setText(sb.toString());
+                ++numberOfDots;
+                if (numberOfDots > 3) {
+                    numberOfDots = 0;
+                }
+            }
+
+            public void onFinish() {
+                ViewHelper.getInstance().toastMessage(HomePageActivity.this, "No match was found. Please try again");
+                cancelButtonPressed(null);
+            }
+        }.start();
+
+        return countDownTimer;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                PickUpLocation result = data.getParcelableExtra("newLocation");
+                CRDataManager.getInstance().currentUser.pickUpLocation = result;
+                onpickUpLocationEditButton.setText(result.locationName);
+                drawStartAndEndMarkers();
+            }
+            if (resultCode == RESULT_CANCELED) {
+
+            }
+        } else if (requestCode == 2){
+            if(resultCode == RESULT_OK){
+                PickUpLocation result = data.getParcelableExtra("newLocation");
+                CRDataManager.getInstance().currentUser.destinationLocation = result;
+                destinationLocationEditButton.setText(result.locationName);
+                drawStartAndEndMarkers();
+            }
+            if (resultCode == RESULT_CANCELED) {
+
+            }
+        }
+    }
+
+    private void drawStartAndEndMarkers(){
+        map.clear();
+        PickUpLocation start = CRDataManager.getInstance().currentUser.pickUpLocation;
+        PickUpLocation end = CRDataManager.getInstance().currentUser.destinationLocation;
+        if (start != null) {
+            drawMarker(start.latitude, start.longitude, "Start");
+        }
+        if (end != null){
+            drawMarker(end.latitude, end.longitude, "Destination");
+        }
+    }
+
+    private void drawMarker(Double latitude, Double longitude, String title) {
+        //  convert the location object to a LatLng object that can be used by the map API
+        LatLng currentPosition = new LatLng(latitude, longitude);
+
+        // zoom to the current location
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 14));
+
+        // add a marker to the map indicating our current position
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(currentPosition)
+                .title(title)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        Marker marker = map.addMarker(markerOptions);
+        marker.showInfoWindow();
     }
 }

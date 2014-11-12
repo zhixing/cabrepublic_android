@@ -4,16 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
-import android.os.Handler;
+import android.widget.EditText;
 
 import sg.edu.nus.cabrepublic.utilities.CRDataManager;
-import sg.edu.nus.cabrepublic.utilities.UserCredential;
 import sg.edu.nus.cabrepublic.utilities.ViewHelper;
 
 public class LoginActivity extends Activity {
@@ -43,7 +41,7 @@ public class LoginActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onLoginButtonClicked(View view){
+    public void onLoginButtonClicked(View view) {
         EditText userEmailText = (EditText) findViewById(R.id.email_address);
         EditText userPasswordText = (EditText) findViewById(R.id.password);
 
@@ -62,11 +60,16 @@ public class LoginActivity extends Activity {
                 @Override
                 public void handleMessage(Message userMsg) {
                     if (userMsg.what == 0) {
-                        Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-                        intent.putExtra("ENTRANCE", 1);
-                        intent.putExtra("NEW_USER", true);
-                        ViewHelper.getInstance().toastMessage(LoginActivity.this, "Successfully logged in");
-                        startActivity(intent);
+                        if (CRDataManager.getInstance().currentUser.Type == 0) {
+                            Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                            ViewHelper.getInstance().toastMessage(LoginActivity.this, "Successfully logged in");
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(LoginActivity.this, TaxiHomeActivity.class);
+                            ViewHelper.getInstance().toastMessage(LoginActivity.this, "Successfully logged in");
+                            startActivity(intent);
+                        }
+
                     } else {
                         ViewHelper.getInstance().handleRequestFailure(LoginActivity.this, userMsg.what, (String) userMsg.obj);
                     }

@@ -1,9 +1,9 @@
 package sg.edu.nus.cabrepublic.models;
 
+import com.google.gson.JsonObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import com.google.gson.JsonObject;
 
 import sg.edu.nus.cabrepublic.utilities.CRDataManager;
 
