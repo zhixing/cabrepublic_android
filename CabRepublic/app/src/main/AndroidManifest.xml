@@ -14,7 +14,6 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.SET_DEBUG_APP" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -27,6 +26,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -36,26 +36,27 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/cr_launcher_icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
             android:name="sg.edu.nus.cabrepublic.LoginActivity"
             android:label="@string/app_name" >
+
+        </activity>
+        <activity
+            android:name="sg.edu.nus.cabrepublic.HomePageActivity"
+            android:label="@string/title_activity_home_page" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="sg.edu.nus.cabrepublic.HomePageActivity"
-            android:label="@string/title_activity_home_page" >
-        </activity>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCzGUI05u785nMeY3F1jsXUiqX9UWhH7nY" />
+            android:value="AIzaSyAD41fiKQtqnGhsmOsaz7VIm_tCQZB-FOQ" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -65,7 +66,7 @@
             android:label="@string/title_activity_matched_info" >
         </activity>
         <activity
-            android:name="sg.edu.nus.cabrepublic.matchingProcessActivity"
+            android:name=".MatchingProcessActivity"
             android:label="@string/title_activity_matching_process" >
         </activity>
     </application>
