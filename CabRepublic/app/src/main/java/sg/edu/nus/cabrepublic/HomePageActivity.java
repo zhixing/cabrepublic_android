@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
@@ -53,7 +54,8 @@ public class HomePageActivity extends Activity {
 
     // Utility:
     private CountDownTimer countDownTimer;
-    private Timer pollCoalitionForMathTimer;
+//    private Timer pollAppServerForMatchTimer;
+    private android.os.Handler poller;
 
     private CRDataManager crDataManager;
 
@@ -202,13 +204,7 @@ public class HomePageActivity extends Activity {
                         countDownTextView.setVisibility(View.VISIBLE);
                         countDownTimer = initializeCountDownTextView();
 
-                        pollCoalitionForMathTimer = new Timer();
-                        pollCoalitionForMathTimer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                queryCoalitionServerForMatch();
-                            }
-                        }, 0, 5000);
+                        queryCoalitionServerForMatch();
 
                     } else {
                         ViewHelper.getInstance().handleRequestFailure(HomePageActivity.this, userMsg.what, (String) userMsg.obj);
@@ -230,7 +226,7 @@ public class HomePageActivity extends Activity {
             public void handleMessage(Message userMsg) {
                 if (userMsg.what == 0) {
 
-                    pollCoalitionForMathTimer.cancel();
+                    poller.removeCallbacksAndMessages(null);
                     cancelButton.setVisibility(View.INVISIBLE);
                     countDownTextView.setVisibility(View.INVISIBLE);
                     buttonsHolder.setVisibility(View.INVISIBLE);
@@ -246,11 +242,51 @@ public class HomePageActivity extends Activity {
 
     private void queryCoalitionServerForMatch(){
         // Query the coalition server for a few potential email addresses that fits my preference:
-        
-        // If Found:
-        //pollCoalitionForMathTimer.cancel();
-        //Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
-        //startActivity(intent);
+        // If NOT Found:
+        final long interval = 2000;
+        poller = new android.os.Handler();
+        final Runnable runnable = new Runnable() {
+            final Runnable innerThis = this;
+            @Override
+            public void run() {
+                android.os.Handler innerHandler = new android.os.Handler() {
+                    @Override
+                    public void handleMessage(Message userMsg) {
+                        // Found a match:
+                        if (userMsg.what == 0) {
+                            //Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
+                            //startActivity(intent);
+                        } else if (userMsg.what == 1) {
+                            // 404 not found
+                            poller.postDelayed(innerThis, interval);
+                        } else{
+                            ViewHelper.getInstance().handleRequestFailure(HomePageActivity.this, userMsg.what, (String) userMsg.obj);
+                        }
+                    }
+                };
+                CRDataManager.getInstance().pollMatchStatusWithCompletion(innerHandler);
+            }
+        };
+        poller.postDelayed(runnable, interval);
+
+        // If emails were found from coalition:
+        /*
+        pollAppServerForMatchTimer.cancel();
+        android.os.Handler pollMatchFromAppServerHandler = new android.os.Handler() {
+            @Override
+            public void handleMessage(Message userMsg) {
+                if (userMsg.what == 0) {
+
+                    Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
+                    startActivity(intent);
+
+                } else {
+                    ViewHelper.getInstance().handleRequestFailure(HomePageActivity.this, userMsg.what, (String) userMsg.obj);
+                }
+            }
+        };
+        //CRDataManager.getInstance().findMatchingWithCompletion, pollMatchFromAppServerHandler);
+        */
     }
 
     private CountDownTimer initializeCountDownTextView() {
