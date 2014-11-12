@@ -60,11 +60,16 @@ public class LoginActivity extends Activity {
                 @Override
                 public void handleMessage(Message userMsg) {
                     if (userMsg.what == 0) {
-                        Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-                        intent.putExtra("ENTRANCE", 1);
-                        intent.putExtra("NEW_USER", true);
-                        ViewHelper.getInstance().toastMessage(LoginActivity.this, "Successfully logged in");
-                        startActivity(intent);
+                        if (CRDataManager.getInstance().currentUser.Type == 0) {
+                            Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                            ViewHelper.getInstance().toastMessage(LoginActivity.this, "Successfully logged in");
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(LoginActivity.this, TaxiHomeActivity.class);
+                            ViewHelper.getInstance().toastMessage(LoginActivity.this, "Successfully logged in");
+                            startActivity(intent);
+                        }
+
                     } else {
                         ViewHelper.getInstance().handleRequestFailure(LoginActivity.this, userMsg.what, (String) userMsg.obj);
                     }
