@@ -95,8 +95,9 @@
             android:layout_width="fill_parent"
             android:layout_height="70dp"
             android:background="@drawable/bg_button"
-            android:text="Find someone to share"
+            android:text="Get Started!"
             android:gravity="center_horizontal|center_vertical"
-            android:textSize="25sp" />
+            android:textSize="25sp"
+            android:onClick="onStartIntentButtonClicked"/>        />
     </LinearLayout>
 </FrameLayout>

@@ -136,6 +136,11 @@ public class HomePageActivity extends Activity {
         startActivityForResult(intent, 1);
     }
 
+    public void onStartIntentButtonClicked(View v){
+        //Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
+        //startActivity(intent);
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 1) {
