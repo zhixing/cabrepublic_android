@@ -18,6 +18,7 @@ import retrofit.android.AndroidLog;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import sg.edu.nus.cabrepublic.models.ErrorResponse;
+import sg.edu.nus.cabrepublic.models.FindMatchResponse;
 import sg.edu.nus.cabrepublic.models.MatchPollResponse;
 import sg.edu.nus.cabrepublic.models.PickUpLocation;
 import sg.edu.nus.cabrepublic.models.RequestError;
@@ -144,6 +145,41 @@ public class CRDataManager {
         crService.deleteMatching(currentUser.Access_token, callback);
     }
 
+    public void createIntentionWithCompletion(double lon, double lat, final Handler completion) {
+        Callback<Object> callback = new Callback<Object>() {
+            @Override
+            public void success(Object createResponse, Response response) {
+                completion.sendMessage(Message.obtain(null, 0, null));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                RequestError err = resolveRequestFailure(error);
+                completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
+
+            }
+        };
+
+        crService.createIntention(currentUser.Access_token, lat, lon, callback);
+    }
+
+    public void findMatchingWithCompletion(String[] emails, final Handler completion) {
+        Callback<FindMatchResponse> callback = new Callback<FindMatchResponse>() {
+            @Override
+            public void success(FindMatchResponse findMatchResponse, Response response) {
+                completion.sendMessage(Message.obtain(null, 0, findMatchResponse));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                RequestError err = resolveRequestFailure(error);
+                completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
+
+            }
+        };
+        crService.findMatching(currentUser.Access_token, strJoin(emails, "$"), callback);
+    }
+
     public void logout(Context context) {
 
     }
@@ -202,5 +238,15 @@ public class CRDataManager {
         pickUpLocations.add(new PickUpLocation("Temasek Hall", 103.771761, 1.293101));
 
         return pickUpLocations;
+    }
+
+    public String strJoin(String[] aArr, String sSep) {
+        StringBuilder sbStr = new StringBuilder();
+        for (int i = 0, il = aArr.length; i < il; i++) {
+            if (i > 0)
+                sbStr.append(sSep);
+            sbStr.append(aArr[i]);
+        }
+        return sbStr.toString();
     }
 }

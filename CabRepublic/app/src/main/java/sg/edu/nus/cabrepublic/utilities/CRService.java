@@ -8,6 +8,8 @@ import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.POST;
 import retrofit.http.PUT;
+import retrofit.http.Query;
+import sg.edu.nus.cabrepublic.models.FindMatchResponse;
 import sg.edu.nus.cabrepublic.models.MatchPollResponse;
 import sg.edu.nus.cabrepublic.nework_data.UserResponse;
 
@@ -30,4 +32,11 @@ public interface CRService {
 
     @DELETE("/matchings")
     void deleteMatching(@Header("Authorization") String token, Callback<Object> callback);
+
+    @FormUrlEncoded
+    @POST("/intentions")
+    void createIntention(@Header("Authorization") String token, @Field("destination_latitude") double lat, @Field("destination_longitude") double lon, Callback<Object> callback);
+
+    @GET("/matchings")
+    void findMatching(@Header("Authorization") String token, @Query("emails") String emails, Callback<FindMatchResponse> callback);
 }
