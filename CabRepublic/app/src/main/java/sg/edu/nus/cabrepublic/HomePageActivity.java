@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,8 +28,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 import sg.edu.nus.cabrepublic.models.PickUpLocation;
+import sg.edu.nus.cabrepublic.models.User;
 import sg.edu.nus.cabrepublic.utilities.CRDataManager;
 import sg.edu.nus.cabrepublic.utilities.ViewHelper;
 
@@ -52,6 +56,7 @@ public class HomePageActivity extends Activity {
     private Timer pollCoalitionForMathTimer;
 
     private CRDataManager crDataManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,23 +185,40 @@ public class HomePageActivity extends Activity {
     }
 
     public void onStartSharingButtonClicked(View v){
-        if (CRDataManager.getInstance().currentUser.destinationLocation == null){
+        User currentUser = CRDataManager.getInstance().currentUser;
+        if (currentUser.destinationLocation == null){
             ViewHelper.getInstance().toastMessage(HomePageActivity.this, "Please select your destination.");
         } else {
 
-            // Show the timer:
-            buttonsHolder.setVisibility(View.VISIBLE);
-            cancelButton.setVisibility(View.VISIBLE);
-            countDownTextView.setVisibility(View.VISIBLE);
-            countDownTimer = initializeCountDownTextView();
-
-            pollCoalitionForMathTimer = new Timer();
-            pollCoalitionForMathTimer.schedule(new TimerTask() {
+            // Create an intention and send to server:
+            android.os.Handler startIntentionHandler = new android.os.Handler() {
                 @Override
-                public void run() {
-                    queryCoalitionServerForMatch();
+                public void handleMessage(Message userMsg) {
+                    if (userMsg.what == 0) {
+
+                        // Show the timer:
+                        buttonsHolder.setVisibility(View.VISIBLE);
+                        cancelButton.setVisibility(View.VISIBLE);
+                        countDownTextView.setVisibility(View.VISIBLE);
+                        countDownTimer = initializeCountDownTextView();
+
+                        pollCoalitionForMathTimer = new Timer();
+                        pollCoalitionForMathTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                queryCoalitionServerForMatch();
+                            }
+                        }, 0, 5000);
+
+                    } else {
+                        ViewHelper.getInstance().handleRequestFailure(HomePageActivity.this, userMsg.what, (String) userMsg.obj);
+                    }
                 }
-            }, 0, 5000);
+            };
+
+            CRDataManager.getInstance().createIntentionWithCompletion(
+                    currentUser.pickUpLocation.longitude,
+                    currentUser.pickUpLocation.latitude, startIntentionHandler);
         }
     }
 
@@ -208,8 +230,9 @@ public class HomePageActivity extends Activity {
     }
 
     private void queryCoalitionServerForMatch(){
-        Log.d("ssssssssssss", "querying...");
+        // Query the coalition server for a few potential email addresses that fits my preference:
 
+        // If Found:
         //Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
         //startActivity(intent);
     }
