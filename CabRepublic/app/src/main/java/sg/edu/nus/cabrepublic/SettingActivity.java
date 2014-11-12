@@ -12,13 +12,13 @@ import android.widget.Toast;
 
 
 public class SettingActivity extends Activity {
-
+    private Spinner spinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        Spinner spinner = (Spinner) findViewById(R.id.gender_content);
+        spinner = (Spinner) findViewById(R.id.gender_content);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.gender_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -51,6 +51,11 @@ public class SettingActivity extends Activity {
         if (age < 0 || age > 100) {
             Toast.makeText(this, "Age must be between 0 and 100.", Toast.LENGTH_LONG).show();
         } else {
+            EditText nameField = (EditText) findViewById(R.id.name_content);
+            String name = nameField.getText().toString();
+            int gender = spinner.getSelectedItemPosition();
+            EditText numberField = (EditText) findViewById(R.id.number_content);
+            String number = numberField.getText().toString();
             
         }
     }

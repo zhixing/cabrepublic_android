@@ -39,7 +39,7 @@ public class CRDataManager {
     public static final int UNAUTHORIZED = 2;
     public static final int REASONED_ERROR = 3;
     public static final int INTERNAL_ERROR = 4;
-    public static final int NOT_FOUND = 5;
+        public static final int NOT_FOUND = 5;
     public static final int UNKNOWN = 6;
 
     public static final int GENDER_MALE = 0;
