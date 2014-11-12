@@ -5,4 +5,5 @@ package sg.edu.nus.cabrepublic.models;
  */
 public class MatchPollResponse {
     public String Email;
+    public String Pickup_location;
 }

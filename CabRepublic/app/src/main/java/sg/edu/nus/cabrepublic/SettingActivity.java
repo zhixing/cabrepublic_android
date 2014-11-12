@@ -51,7 +51,7 @@ public class SettingActivity extends Activity {
         if (age < 0 || age > 100) {
             Toast.makeText(this, "Age must be between 0 and 100.", Toast.LENGTH_LONG).show();
         } else {
-
+            
         }
     }
 }
