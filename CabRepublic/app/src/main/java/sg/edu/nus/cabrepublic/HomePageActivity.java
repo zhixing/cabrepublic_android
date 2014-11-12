@@ -7,20 +7,30 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import sg.edu.nus.cabrepublic.models.PickUpLocation;
 import sg.edu.nus.cabrepublic.utilities.CRDataManager;
+import sg.edu.nus.cabrepublic.utilities.ViewHelper;
 
 
 public class HomePageActivity extends Activity {
@@ -31,6 +41,15 @@ public class HomePageActivity extends Activity {
     private Button onpickUpLocationEditButton;
     private Button initializeShareButton;
     private Button destinationLocationEditButton;
+
+    // At bottom:
+    private LinearLayout buttonsHolder;
+    private ImageButton cancelButton;
+    private TextView countDownTextView;
+
+    // Utility:
+    private CountDownTimer countDownTimer;
+    private Timer pollCoalitionForMathTimer;
 
     private CRDataManager crDataManager;
 
@@ -46,17 +65,21 @@ public class HomePageActivity extends Activity {
         onpickUpLocationEditButton = (Button)findViewById(R.id.pickUpLocationEditButton);
         destinationLocationEditButton = (Button)findViewById(R.id.destinationEditButton);
 
+        cancelButton = (ImageButton)findViewById(R.id.cancelButton);
+        countDownTimer = null;
+        countDownTextView = (TextView)findViewById(R.id.countDownTextView);
+        buttonsHolder = (LinearLayout)findViewById(R.id.buttonsholder);
+
+        // To be hidden:
+        cancelButton.setVisibility(View.INVISIBLE);
+        countDownTextView.setVisibility(View.INVISIBLE);
+        buttonsHolder.setVisibility(View.INVISIBLE);
+
         crDataManager = CRDataManager.getInstance();
 
-        // Initialize Google Map:
         initializeGoogleMap();
-
-        // Set the texts:
         setUserNameAndProfileImage();
-
-        // Pick up:
-        setPickupLocationAndPreference();
-
+        setLocationAndPreferenceTexts();
     }
 
     private void initializeGoogleMap(){
@@ -80,7 +103,7 @@ public class HomePageActivity extends Activity {
         profilePicture.setImageBitmap(profileImageBitmap);
     }
 
-    private void setPickupLocationAndPreference(){
+    private void setLocationAndPreferenceTexts(){
 
         String preferenceString = "";
         if (crDataManager.currentUser.Gender_preference == crDataManager.GENDER_FEMALE) {
@@ -94,6 +117,9 @@ public class HomePageActivity extends Activity {
         preferenceButton.setText(preferenceString);
 
         onpickUpLocationEditButton.setText(CRDataManager.getInstance().currentUser.pickUpLocation.locationName);
+
+        destinationLocationEditButton.setText("Please Select");
+        CRDataManager.getInstance().currentUser.destinationLocation = null;
     }
 
     private void centerMapOnMyLocation() {
@@ -107,6 +133,8 @@ public class HomePageActivity extends Activity {
             myLocation = new LatLng(location.getLatitude(), location.getLongitude());
         }
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 13.0));
+
+        drawStartAndEndMarkers();
     }
 
     @Override
@@ -147,13 +175,82 @@ public class HomePageActivity extends Activity {
     public void onDestinationButtonClicked(View v){
         Intent intent = new Intent(HomePageActivity.this, SearchPlacesActivity.class);
         intent.setAction(Intent.ACTION_SEARCH);
-        intent.putExtra(SearchManager.QUERY, "Singapore");
+        intent.putExtra(SearchManager.QUERY, "Prince George's Park Singapore");
         startActivityForResult(intent, 2);
     }
 
-    public void onStartIntentButtonClicked(View v){
-        Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
-        startActivity(intent);
+    public void onStartSharingButtonClicked(View v){
+        if (CRDataManager.getInstance().currentUser.destinationLocation == null){
+            ViewHelper.getInstance().toastMessage(HomePageActivity.this, "Please select your destination.");
+        } else {
+
+            // Show the timer:
+            buttonsHolder.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.VISIBLE);
+            countDownTextView.setVisibility(View.VISIBLE);
+            countDownTimer = initializeCountDownTextView();
+
+            pollCoalitionForMathTimer = new Timer();
+            pollCoalitionForMathTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    queryCoalitionServerForMatch();
+                }
+            }, 0, 5000);
+        }
+    }
+
+    public void cancelButtonPressed(View v){
+        pollCoalitionForMathTimer.cancel();
+        cancelButton.setVisibility(View.INVISIBLE);
+        countDownTextView.setVisibility(View.INVISIBLE);
+        buttonsHolder.setVisibility(View.INVISIBLE);
+    }
+
+    private void queryCoalitionServerForMatch(){
+        Log.d("ssssssssssss", "querying...");
+
+        //Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
+        //startActivity(intent);
+    }
+
+    private CountDownTimer initializeCountDownTextView() {
+        countDownTextView = (TextView) findViewById(R.id.countDownTextView);
+        final CountDownTimer countDownTimer = new CountDownTimer(10000, 1000) {
+            int numberOfDots = 0;
+            public void onTick(long millisUntilFinished) {
+                //countDownTextView.setText("seconds remaining: " + millisUntilFinished / 1000);
+                long secondsRemaining = millisUntilFinished/1000;
+                String mins = "" + secondsRemaining/60;
+                String secs = "" + secondsRemaining%60;
+
+                if (secs.length() < 2) {
+                    secs = "0" + secs;
+                }
+
+                StringBuilder sb = new StringBuilder();
+                sb.append("Finding a match");
+                for (int i = 0; i < numberOfDots; ++i) {
+                    sb.append(".");
+                }
+                for (int i = 0; i < 3-numberOfDots; ++i) {
+                    sb.append(" ");
+                }
+                sb.append("(" + mins + ":" + secs + ")");
+                countDownTextView.setText(sb.toString());
+                ++numberOfDots;
+                if (numberOfDots > 3) {
+                    numberOfDots = 0;
+                }
+            }
+
+            public void onFinish() {
+                ViewHelper.getInstance().toastMessage(HomePageActivity.this, "No match was found. Please try again");
+                cancelButtonPressed(null);
+            }
+        }.start();
+
+        return countDownTimer;
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -163,6 +260,7 @@ public class HomePageActivity extends Activity {
                 PickUpLocation result = data.getParcelableExtra("newLocation");
                 CRDataManager.getInstance().currentUser.pickUpLocation = result;
                 onpickUpLocationEditButton.setText(result.locationName);
+                drawStartAndEndMarkers();
             }
             if (resultCode == RESULT_CANCELED) {
 
@@ -172,12 +270,39 @@ public class HomePageActivity extends Activity {
                 PickUpLocation result = data.getParcelableExtra("newLocation");
                 CRDataManager.getInstance().currentUser.destinationLocation = result;
                 destinationLocationEditButton.setText(result.locationName);
-
-
+                drawStartAndEndMarkers();
             }
             if (resultCode == RESULT_CANCELED) {
 
             }
         }
+    }
+
+    private void drawStartAndEndMarkers(){
+        map.clear();
+        PickUpLocation start = CRDataManager.getInstance().currentUser.pickUpLocation;
+        PickUpLocation end = CRDataManager.getInstance().currentUser.destinationLocation;
+        if (start != null) {
+            drawMarker(start.latitude, start.longitude, "Start");
+        }
+        if (end != null){
+            drawMarker(end.latitude, end.longitude, "Destination");
+        }
+    }
+
+    private void drawMarker(Double latitude, Double longitude, String title) {
+        //  convert the location object to a LatLng object that can be used by the map API
+        LatLng currentPosition = new LatLng(latitude, longitude);
+
+        // zoom to the current location
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 14));
+
+        // add a marker to the map indicating our current position
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(currentPosition)
+                .title(title)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        Marker marker = map.addMarker(markerOptions);
+        marker.showInfoWindow();
     }
 }
