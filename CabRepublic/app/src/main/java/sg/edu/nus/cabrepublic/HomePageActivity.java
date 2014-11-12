@@ -220,12 +220,12 @@ public class HomePageActivity extends Activity {
 
     public void cancelButtonPressed(View v){
         // Delete the intention from the server:
-        // Create an intention and send to server:
         android.os.Handler deleteMatchHandler = new android.os.Handler() {
             @Override
             public void handleMessage(Message userMsg) {
                 if (userMsg.what == 0) {
 
+                    countDownTimer.cancel();
                     poller.removeCallbacksAndMessages(null);
                     cancelButton.setVisibility(View.INVISIBLE);
                     countDownTextView.setVisibility(View.INVISIBLE);
