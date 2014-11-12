@@ -10,8 +10,13 @@ import java.io.Serializable;
  */
 public class User extends CRBaseModel implements Parcelable, Serializable {
 
+    // Stored locally:
+    public int Gender;
+    public int Age;
     public String Name;
     public String Email;
+
+    // Inferred each time:
     public PickUpLocation pickUpLocation;
     public PickUpLocation destinationLocation;
 
@@ -19,8 +24,6 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
     public int Age_min;
     public int Age_max;
     public int Gender_preference;
-    public int Gender;
-    public int Age;
     public int Type; // (0 for ordinary user, 1 for taxi driver)
     public String Access_token;
 
