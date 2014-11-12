@@ -122,6 +122,6 @@
             android:text="Get Started!"
             android:gravity="center_horizontal|center_vertical"
             android:textSize="20sp"
-            android:onClick="onStartIntentButtonClicked"/>
+            android:onClick="onStartSharingButtonClicked"/>
     </LinearLayout>
 </FrameLayout>
