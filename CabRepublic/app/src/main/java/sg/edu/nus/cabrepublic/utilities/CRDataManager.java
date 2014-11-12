@@ -18,6 +18,7 @@ import retrofit.android.AndroidLog;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import sg.edu.nus.cabrepublic.models.ErrorResponse;
+import sg.edu.nus.cabrepublic.models.MatchPollResponse;
 import sg.edu.nus.cabrepublic.models.PickUpLocation;
 import sg.edu.nus.cabrepublic.models.RequestError;
 import sg.edu.nus.cabrepublic.models.User;
@@ -107,6 +108,40 @@ public class CRDataManager {
         };
         Log.d("cabrepublic", "Access token is " + currentUser.Access_token);
         crService.updatePreference(currentUser.Access_token, ageMin, ageMax, gender, callback);
+    }
+
+    public void pollMatchStatusWithCompletion(final Handler completion) {
+        Callback<MatchPollResponse> callback = new Callback<MatchPollResponse>() {
+            @Override
+            public void success(MatchPollResponse matchPollResponse, Response response) {
+                completion.sendMessage(Message.obtain(null, 0, matchPollResponse.Email));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                RequestError err = resolveRequestFailure(error);
+                completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
+
+            }
+        };
+        crService.pollMatchingStatus(currentUser.Access_token, callback);
+    }
+
+    public void deleteMatchingWithCompletion(final Handler completion) {
+        Callback<Object> callback = new Callback<Object>() {
+            @Override
+            public void success(Object deleteResponse, Response response) {
+                completion.sendMessage(Message.obtain(null, 0, null));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                RequestError err = resolveRequestFailure(error);
+                completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
+
+            }
+        };
+        crService.deleteMatching(currentUser.Access_token, callback);
     }
 
     public void logout(Context context) {
