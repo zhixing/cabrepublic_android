@@ -242,7 +242,6 @@ public class HomePageActivity extends Activity {
 
     private void queryCoalitionServerForMatch(){
         // Query the coalition server for a few potential email addresses that fits my preference:
-
         // If NOT Found:
         final long interval = 2000;
         poller = new android.os.Handler();

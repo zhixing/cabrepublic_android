@@ -18,6 +18,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="20dp"
+            android:text="Name"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/name_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/name"
+            android:layout_marginLeft="120dp"
+            android:ems="10"
+            android:inputType="text" />
+        <TextView
+            android:id="@+id/number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/name"
+            android:layout_marginTop="20dp"
+            android:text="Number"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/number_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/number"
+            android:layout_marginLeft="120dp"
+            android:ems="10"
+            android:inputType="number" />
 
         <TextView
             android:id="@+id/age"
@@ -25,6 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="20dp"
+            android:layout_below="@+id/number"
             android:text="Age"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -58,7 +94,7 @@
         <Button
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/gender_content"
+            android:layout_below="@+id/gender"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="80dp"
             android:background="@drawable/confirm_button_selector"

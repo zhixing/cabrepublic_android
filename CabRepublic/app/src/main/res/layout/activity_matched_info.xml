@@ -16,49 +16,57 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center">
 
             <sg.edu.nus.cabrepublic.RoundedImageView
                 android:id="@+id/matchedProfilePicture"
-                android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginRight="40dp"
                 android:layout_width="100dp"
-                android:layout_height="100dp" />
+                android:layout_height="100dp"
+                />
 
-            <TextView
-                android:id="@+id/matchedNameAndAge"
-                android:textSize="30sp"
-                android:textColor="#ffffff"
-                android:gravity="center"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/matchedNameAndAge"
+                    android:textSize="30sp"
+                    android:textColor="#ffffff"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"/>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+                    <ImageButton
+                        android:id="@+id/callButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="40dp"
+                        android:src="@drawable/call_icon"
+                        android:background="@null"
+                        />
+                    <ImageButton
+                        android:id="@+id/messageButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/msg_icon"
+                        android:background="@null"
+                        />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <TextView
-            android:textColor="#555454"
-            android:textSize="18sp"
-            android:text="@string/header_name_of_contact"
-            android:paddingLeft="15dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:background="@drawable/bg_header_shadow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/contactButton"
-            android:layout_width="fill_parent"
-            android:layout_height="70dp"
-            android:background="@drawable/bg_button"
-            android:drawableLeft="@drawable/phone_icon"
-            android:paddingLeft="30dp"
-            android:drawablePadding="30dp"
-            android:gravity="left|center_vertical"
-            android:textSize="30sp" />
-
-        <TextView
-            android:textColor="#555454"
+            android:textColor="#000000"
             android:textSize="18sp"
             android:text="@string/header_name_of_pickup_map"
             android:paddingLeft="15dp"
@@ -66,22 +74,35 @@
             android:paddingBottom="4dp"
             android:background="@drawable/bg_header_shadow"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
         <fragment
             android:id="@+id/pickUpLocationMap"
             android:name="com.google.android.gms.maps.MapFragment"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
-        <Button
-            android:id="@+id/nextButton"
+        <LinearLayout
             android:layout_width="fill_parent"
+            android:orientation="horizontal"
             android:layout_height="70dp"
-            android:background="@drawable/bg_button"
-            android:text="Find a Cab"
-            android:gravity="center_horizontal|center_vertical"
-            android:textSize="30sp" />
+            android:background="#2c2c2c"
+            android:clickable="true"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/countDownTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="20sp"/>
+            <ImageButton
+                android:id="@+id/cancelButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/cancel_icon"/>
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>

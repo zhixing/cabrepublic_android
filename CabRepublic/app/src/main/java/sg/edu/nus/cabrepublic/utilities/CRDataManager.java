@@ -115,7 +115,7 @@ public class CRDataManager {
         Callback<MatchPollResponse> callback = new Callback<MatchPollResponse>() {
             @Override
             public void success(MatchPollResponse matchPollResponse, Response response) {
-                completion.sendMessage(Message.obtain(null, 0, matchPollResponse.Email));
+                completion.sendMessage(Message.obtain(null, 0, matchPollResponse));
             }
 
             @Override
