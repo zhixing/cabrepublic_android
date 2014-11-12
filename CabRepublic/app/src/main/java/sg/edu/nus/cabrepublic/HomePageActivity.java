@@ -223,16 +223,32 @@ public class HomePageActivity extends Activity {
     }
 
     public void cancelButtonPressed(View v){
-        pollCoalitionForMathTimer.cancel();
-        cancelButton.setVisibility(View.INVISIBLE);
-        countDownTextView.setVisibility(View.INVISIBLE);
-        buttonsHolder.setVisibility(View.INVISIBLE);
+        // Delete the intention from the server:
+        // Create an intention and send to server:
+        android.os.Handler deleteMatchHandler = new android.os.Handler() {
+            @Override
+            public void handleMessage(Message userMsg) {
+                if (userMsg.what == 0) {
+
+                    pollCoalitionForMathTimer.cancel();
+                    cancelButton.setVisibility(View.INVISIBLE);
+                    countDownTextView.setVisibility(View.INVISIBLE);
+                    buttonsHolder.setVisibility(View.INVISIBLE);
+
+                } else {
+                    ViewHelper.getInstance().handleRequestFailure(HomePageActivity.this, userMsg.what, (String) userMsg.obj);
+                }
+            }
+        };
+
+        CRDataManager.getInstance().deleteMatchingWithCompletion(deleteMatchHandler);
     }
 
     private void queryCoalitionServerForMatch(){
         // Query the coalition server for a few potential email addresses that fits my preference:
-
+        
         // If Found:
+        //pollCoalitionForMathTimer.cancel();
         //Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
         //startActivity(intent);
     }
