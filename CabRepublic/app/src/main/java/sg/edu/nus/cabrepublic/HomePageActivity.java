@@ -1,6 +1,7 @@
 package sg.edu.nus.cabrepublic;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -122,6 +123,10 @@ public class HomePageActivity extends Activity {
             Intent intent = new Intent(HomePageActivity.this, SettingActivity.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_search){
+            Intent intent = new Intent(HomePageActivity.this, SearchPlacesActivity.class);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -137,7 +142,10 @@ public class HomePageActivity extends Activity {
     }
 
     public void onDestinationButtonClicked(View v){
-
+        Intent intent = new Intent(HomePageActivity.this, SearchPlacesActivity.class);
+        intent.setAction(Intent.ACTION_SEARCH);
+        intent.putExtra(SearchManager.QUERY, "Singapore");
+        startActivityForResult(intent, 1);
     }
 
     public void onStartIntentButtonClicked(View v){

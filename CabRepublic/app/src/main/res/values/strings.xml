@@ -13,7 +13,9 @@
     <string name="title_activity_preference">Preference for sharing a cab</string>
     <string name="title_activity_setting">Settings</string>
     <string name="title_activity_pick_up_location_list">Pick Up Locations Nearby</string>
-    
+    <string name="search_hint">Search Places</string>
+    <string name="search_settings">Search Places</string>
+    <string name="action_search">Search</string>
 
     <string-array name="gender_preference_array">
         <item>Don\'t Care</item>
@@ -26,5 +28,6 @@
     </string-array>
 
     <string name="title_activity_taxi_home">TaxiHomeActivity</string>
+    <string name="title_activity_search_places">SearchPlacesActivity</string>
 
 </resources>
