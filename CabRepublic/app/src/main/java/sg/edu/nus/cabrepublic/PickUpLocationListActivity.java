@@ -36,8 +36,11 @@ public class PickUpLocationListActivity extends Activity {
         pickUpLocationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            Log.d("Cat", "Item clicked");
-                //intent.putExtra("topic", (Parcelable) adapterView.getItemAtPosition(i));
+                PickUpLocation newLocation = (PickUpLocation)adapterView.getItemAtPosition(i);
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("newLocation",(Parcelable)newLocation);
+                setResult(RESULT_OK,returnIntent);
+                finish();
             }
         });
     }

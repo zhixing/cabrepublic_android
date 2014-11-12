@@ -17,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+import sg.edu.nus.cabrepublic.models.PickUpLocation;
 import sg.edu.nus.cabrepublic.utilities.CRDataManager;
 
 
@@ -44,13 +45,38 @@ public class HomePageActivity extends Activity {
         crDataManager = CRDataManager.getInstance();
 
         // Initialize Google Map:
+        initializeGoogleMap();
+
+        // Set the texts:
+        setUserNameAndProfileImage();
+
+        // Pick up:
+        setPickupLocationAndPreference();
+
+    }
+
+    private void initializeGoogleMap(){
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.pickUpLocationMap)).getMap();
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
         centerMapOnMyLocation();
+    }
 
-        // Set the texts:
+    private void setUserNameAndProfileImage(){
         userName.setText(crDataManager.currentUser.Name);
+
+        // Set the profile image:
+        int resourceID;
+        if (crDataManager.currentUser.Gender == crDataManager.GENDER_FEMALE) {
+            resourceID = R.drawable.ic_female;
+        } else {
+            resourceID = R.drawable.ic_male;
+        }
+        Bitmap profileImageBitmap = BitmapFactory.decodeResource(getResources(), resourceID);
+        profilePicture.setImageBitmap(profileImageBitmap);
+    }
+
+    private void setPickupLocationAndPreference(){
 
         String preferenceString = "";
         if (crDataManager.currentUser.Gender_preference == crDataManager.GENDER_FEMALE) {
@@ -63,17 +89,7 @@ public class HomePageActivity extends Activity {
 
         preferenceButton.setText(preferenceString);
 
-        onpickUpLocationEditButton.setText(CRDataManager.getInstance().getPickUpLocations().get(0).locationName);
-
-        // Set the profile image:
-        int resourceID;
-        if (crDataManager.currentUser.Gender == crDataManager.GENDER_FEMALE) {
-            resourceID = R.drawable.ic_female;
-        } else {
-            resourceID = R.drawable.ic_male;
-        }
-        Bitmap profileImageBitmap = BitmapFactory.decodeResource(getResources(), resourceID);
-        profilePicture.setImageBitmap(profileImageBitmap);
+        onpickUpLocationEditButton.setText(CRDataManager.getInstance().currentUser.pickUpLocation.locationName);
     }
 
     private void centerMapOnMyLocation() {
@@ -117,6 +133,20 @@ public class HomePageActivity extends Activity {
 
     public void onpickUpLocationEditButtonClicked(View v){
         Intent intent = new Intent(HomePageActivity.this, PickUpLocationListActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                PickUpLocation result = (PickUpLocation)data.getParcelableExtra("newLocation");
+                CRDataManager.getInstance().currentUser.pickUpLocation = result;
+                onpickUpLocationEditButton.setText(result.locationName);
+            }
+            if (resultCode == RESULT_CANCELED) {
+
+            }
+        }
     }
 }

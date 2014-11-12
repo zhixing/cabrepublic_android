@@ -12,14 +12,19 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
 
     public String Name;
     public String Email;
-    public String Access_token;
+    public PickUpLocation pickUpLocation;
+
+    // Data returned by the server:
     public int Age_min;
     public int Age_max;
+    public int Gender_preference;
     public int Gender;
     public int Age;
-    public int Gender_preference;
+    public int Type; // (0 for ordinary user, 1 for taxi driver)
+    public String Access_token;
 
-    public User(String name, String email, String access_token, int age_min, int age_max, int gender, int age, int gender_preference) {
+    public User(String name, String email, String access_token, int age_min, int age_max, int gender, int age,
+                int gender_preference, PickUpLocation pickUpLocation, int type) {
         this.Name = name;
         this.Email = email;
         this.Access_token = access_token;
@@ -28,6 +33,8 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
         this.Gender = gender;
         this.Age = age;
         this.Gender_preference = gender_preference;
+        this.pickUpLocation = pickUpLocation;
+        this.Type = type;
     }
 
     public User(Parcel parcel) {
@@ -39,6 +46,8 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
         this.Gender = parcel.readInt();
         this.Age = parcel.readInt();
         this.Gender_preference = parcel.readInt();
+        this.pickUpLocation = parcel.readParcelable(PickUpLocation.class.getClassLoader());
+        this.Type = parcel.readInt();
     }
 
     @Override
@@ -56,5 +65,7 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
         parcel.writeInt(this.Gender);
         parcel.writeInt(this.Age);
         parcel.writeInt(this.Gender_preference);
+        parcel.writeParcelable(this.pickUpLocation, 1);
+        parcel.writeInt(this.Type);
     }
 }

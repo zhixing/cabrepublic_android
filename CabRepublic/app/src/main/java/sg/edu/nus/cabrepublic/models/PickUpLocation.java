@@ -10,6 +10,16 @@ import java.io.Serializable;
  */
 public class PickUpLocation extends CRBaseModel implements Parcelable, Serializable {
 
+    public static final Parcelable.Creator<PickUpLocation> CREATOR = new Parcelable.Creator<PickUpLocation>() {
+        public PickUpLocation createFromParcel(Parcel in) {
+            return new PickUpLocation(in);
+        }
+
+        public PickUpLocation[] newArray(int size) {
+            return new PickUpLocation[size];
+        }
+    };
+
     public String locationName;
     public double longitude;
     public double latitude;

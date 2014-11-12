@@ -77,8 +77,10 @@ public class CRDataManager {
                 completion.sendMessage(Message.obtain(null, 0, null));
                 currentUser = user.User;
                 currentUser.Email = userEmail;
+
+                // TODO: these should be retrieved from coalition server or GPS:
                 currentUser.Name = "Worship Ancestor";
-                currentUser.Gender_preference = CRDataManager.getInstance().GENDER_FEMALE;
+                currentUser.pickUpLocation = CRDataManager.getInstance().getPickUpLocations().get(0);
             }
 
             @Override

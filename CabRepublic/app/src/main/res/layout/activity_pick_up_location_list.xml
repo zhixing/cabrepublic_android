@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:background="#EDEDED"
         android:divider="#EDEDED"
+        android:layout_centerVertical="true"
         android:dividerHeight="5dp"/>
 
 </RelativeLayout>
