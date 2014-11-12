@@ -120,9 +120,12 @@ public class CRDataManager {
 
             @Override
             public void failure(RetrofitError error) {
-                RequestError err = resolveRequestFailure(error);
-                completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
-
+                if (error.getResponse().getStatus() == 404){
+                    completion.sendMessage(Message.obtain(null, 1, null));
+                } else{
+                    RequestError err = resolveRequestFailure(error);
+                    completion.sendMessage(Message.obtain(null, err.errorCode, err.reason));
+                }
             }
         };
         crService.pollMatchingStatus(currentUser.Access_token, callback);
