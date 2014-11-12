@@ -1,11 +1,13 @@
 package sg.edu.nus.cabrepublic;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +30,7 @@ public class HomePageActivity extends Activity {
     private Button preferenceButton;
     private Button onpickUpLocationEditButton;
     private Button initializeShareButton;
+    private Button destinationLocationEditButton;
 
     private CRDataManager crDataManager;
 
@@ -41,6 +44,7 @@ public class HomePageActivity extends Activity {
         preferenceButton = (Button) findViewById(R.id.preferenceButton);
         initializeShareButton = (Button) findViewById(R.id.initializeShareButton);
         onpickUpLocationEditButton = (Button)findViewById(R.id.pickUpLocationEditButton);
+        destinationLocationEditButton = (Button)findViewById(R.id.destinationEditButton);
 
         crDataManager = CRDataManager.getInstance();
 
@@ -97,12 +101,12 @@ public class HomePageActivity extends Activity {
         map.setMyLocationEnabled(true);
 
         Location location = map.getMyLocation();
-        LatLng myLocation = new LatLng(103.78072, 1.297402);
+        LatLng myLocation = new LatLng(1.297402, 103.78072);
 
         if (location != null) {
             myLocation = new LatLng(location.getLatitude(), location.getLongitude());
         }
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 2.0));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 13.0));
     }
 
     @Override
@@ -122,6 +126,10 @@ public class HomePageActivity extends Activity {
             Intent intent = new Intent(HomePageActivity.this, SettingActivity.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_search){
+            Intent intent = new Intent(HomePageActivity.this, SearchPlacesActivity.class);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -131,18 +139,41 @@ public class HomePageActivity extends Activity {
         startActivity(intent);
     }
 
-    public void onpickUpLocationEditButtonClicked(View v){
+    public void onPickUpLocationEditButtonClicked(View v){
         Intent intent = new Intent(HomePageActivity.this, PickUpLocationListActivity.class);
         startActivityForResult(intent, 1);
+    }
+
+    public void onDestinationButtonClicked(View v){
+        Intent intent = new Intent(HomePageActivity.this, SearchPlacesActivity.class);
+        intent.setAction(Intent.ACTION_SEARCH);
+        intent.putExtra(SearchManager.QUERY, "Singapore");
+        startActivityForResult(intent, 2);
+    }
+
+    public void onStartIntentButtonClicked(View v){
+        Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
+        startActivity(intent);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 1) {
             if(resultCode == RESULT_OK){
-                PickUpLocation result = (PickUpLocation)data.getParcelableExtra("newLocation");
+                PickUpLocation result = data.getParcelableExtra("newLocation");
                 CRDataManager.getInstance().currentUser.pickUpLocation = result;
                 onpickUpLocationEditButton.setText(result.locationName);
+            }
+            if (resultCode == RESULT_CANCELED) {
+
+            }
+        } else if (requestCode == 2){
+            if(resultCode == RESULT_OK){
+                PickUpLocation result = data.getParcelableExtra("newLocation");
+                CRDataManager.getInstance().currentUser.destinationLocation = result;
+                destinationLocationEditButton.setText(result.locationName);
+
+
             }
             if (resultCode == RESULT_CANCELED) {
 

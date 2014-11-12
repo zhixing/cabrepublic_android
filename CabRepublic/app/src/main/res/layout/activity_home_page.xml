@@ -23,12 +23,12 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:layout_width="80dp"
-                android:layout_height="80dp" />
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
 
             <TextView
                 android:id="@+id/userName"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textColor="#ffffff"
                 android:gravity="center"
                 android:layout_width="fill_parent"
@@ -37,11 +37,11 @@
 
         <TextView
             android:textColor="#555454"
-            android:textSize="16sp"
+            android:textSize="13sp"
             android:text="I would like to share with:"
             android:paddingLeft="15dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
             android:background="@drawable/bg_header_shadow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -49,31 +49,7 @@
         <Button
             android:id="@+id/preferenceButton"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_button"
-            android:drawableRight="@drawable/ic_edit"
-            android:paddingLeft="30dp"
-            android:paddingRight="20dp"
-            android:drawablePadding="30dp"
-            android:gravity="right|center_vertical"
-            android:textSize="15sp"
-            android:onClick="onPreferenceClicked"/>
-
-        <TextView
-            android:textColor="#555454"
-            android:textSize="16sp"
-            android:text="@string/header_name_of_pickup_map"
-            android:paddingLeft="15dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:background="@drawable/bg_header_shadow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/pickUpLocationEditButton"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_button"
             android:drawableRight="@drawable/ic_edit"
             android:paddingLeft="30dp"
@@ -81,7 +57,55 @@
             android:drawablePadding="30dp"
             android:gravity="left|center_vertical"
             android:textSize="15sp"
-            android:onClick="onpickUpLocationEditButtonClicked"/>
+            android:onClick="onPreferenceClicked"/>
+
+        <TextView
+            android:textColor="#555454"
+            android:textSize="13sp"
+            android:text="@string/header_name_of_pickup_map"
+            android:paddingLeft="15dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:background="@drawable/bg_header_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/pickUpLocationEditButton"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_button"
+            android:drawableRight="@drawable/ic_edit"
+            android:paddingLeft="30dp"
+            android:paddingRight="20dp"
+            android:drawablePadding="30dp"
+            android:gravity="left|center_vertical"
+            android:textSize="15sp"
+            android:onClick="onPickUpLocationEditButtonClicked"/>
+
+        <TextView
+            android:textColor="#555454"
+            android:textSize="14sp"
+            android:text="@string/header_name_of_edstination_map"
+            android:paddingLeft="13dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:background="@drawable/bg_header_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/destinationEditButton"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_button"
+            android:drawableRight="@drawable/ic_edit"
+            android:paddingLeft="30dp"
+            android:paddingRight="20dp"
+            android:drawablePadding="30dp"
+            android:gravity="left|center_vertical"
+            android:textSize="15sp"
+            android:onClick="onDestinationButtonClicked"/>
 
         <fragment
             android:id="@+id/pickUpLocationMap"
@@ -93,10 +117,11 @@
         <Button
             android:id="@+id/initializeShareButton"
             android:layout_width="fill_parent"
-            android:layout_height="70dp"
+            android:layout_height="45dp"
             android:background="@drawable/bg_button"
-            android:text="Find someone to share"
+            android:text="Get Started!"
             android:gravity="center_horizontal|center_vertical"
-            android:textSize="25sp" />
+            android:textSize="20sp"
+            android:onClick="onStartIntentButtonClicked"/>
     </LinearLayout>
 </FrameLayout>
