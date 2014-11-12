@@ -79,7 +79,7 @@ public class CRDataManager {
                 currentUser.Email = userEmail;
 
                 // TODO: these should be retrieved from coalition server or GPS:
-                currentUser.Name = "Worship Ancestor";
+                currentUser.Name = "Peter Lim";
                 currentUser.pickUpLocation = CRDataManager.getInstance().getPickUpLocations().get(0);
             }
 

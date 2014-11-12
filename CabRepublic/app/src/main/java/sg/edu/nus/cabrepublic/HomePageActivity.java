@@ -97,12 +97,12 @@ public class HomePageActivity extends Activity {
         map.setMyLocationEnabled(true);
 
         Location location = map.getMyLocation();
-        LatLng myLocation = new LatLng(103.78072, 1.297402);
+        LatLng myLocation = new LatLng(1.297402, 103.78072);
 
         if (location != null) {
             myLocation = new LatLng(location.getLatitude(), location.getLongitude());
         }
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 2.0));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 13.0));
     }
 
     @Override
@@ -131,14 +131,18 @@ public class HomePageActivity extends Activity {
         startActivity(intent);
     }
 
-    public void onpickUpLocationEditButtonClicked(View v){
+    public void onPickUpLocationEditButtonClicked(View v){
         Intent intent = new Intent(HomePageActivity.this, PickUpLocationListActivity.class);
         startActivityForResult(intent, 1);
     }
 
+    public void onDestinationButtonClicked(View v){
+
+    }
+
     public void onStartIntentButtonClicked(View v){
-        //Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
+        startActivity(intent);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
