@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,7 @@ public class HomePageActivity extends Activity {
     private Button preferenceButton;
     private Button onpickUpLocationEditButton;
     private Button initializeShareButton;
+    private Button destinationLocationEditButton;
 
     private CRDataManager crDataManager;
 
@@ -42,6 +44,7 @@ public class HomePageActivity extends Activity {
         preferenceButton = (Button) findViewById(R.id.preferenceButton);
         initializeShareButton = (Button) findViewById(R.id.initializeShareButton);
         onpickUpLocationEditButton = (Button)findViewById(R.id.pickUpLocationEditButton);
+        destinationLocationEditButton = (Button)findViewById(R.id.destinationEditButton);
 
         crDataManager = CRDataManager.getInstance();
 
@@ -145,7 +148,7 @@ public class HomePageActivity extends Activity {
         Intent intent = new Intent(HomePageActivity.this, SearchPlacesActivity.class);
         intent.setAction(Intent.ACTION_SEARCH);
         intent.putExtra(SearchManager.QUERY, "Singapore");
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, 2);
     }
 
     public void onStartIntentButtonClicked(View v){
@@ -157,9 +160,20 @@ public class HomePageActivity extends Activity {
 
         if (requestCode == 1) {
             if(resultCode == RESULT_OK){
-                PickUpLocation result = (PickUpLocation)data.getParcelableExtra("newLocation");
+                PickUpLocation result = data.getParcelableExtra("newLocation");
                 CRDataManager.getInstance().currentUser.pickUpLocation = result;
                 onpickUpLocationEditButton.setText(result.locationName);
+            }
+            if (resultCode == RESULT_CANCELED) {
+
+            }
+        } else if (requestCode == 2){
+            if(resultCode == RESULT_OK){
+                PickUpLocation result = data.getParcelableExtra("newLocation");
+                CRDataManager.getInstance().currentUser.destinationLocation = result;
+                destinationLocationEditButton.setText(result.locationName);
+                
+
             }
             if (resultCode == RESULT_CANCELED) {
 

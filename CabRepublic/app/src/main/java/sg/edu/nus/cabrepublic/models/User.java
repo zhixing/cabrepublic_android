@@ -13,6 +13,7 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
     public String Name;
     public String Email;
     public PickUpLocation pickUpLocation;
+    public PickUpLocation destinationLocation;
 
     // Data returned by the server:
     public int Age_min;
@@ -47,6 +48,7 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
         this.Age = parcel.readInt();
         this.Gender_preference = parcel.readInt();
         this.pickUpLocation = parcel.readParcelable(PickUpLocation.class.getClassLoader());
+        this.destinationLocation = parcel.readParcelable(PickUpLocation.class.getClassLoader());
         this.Type = parcel.readInt();
     }
 
@@ -66,6 +68,7 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
         parcel.writeInt(this.Age);
         parcel.writeInt(this.Gender_preference);
         parcel.writeParcelable(this.pickUpLocation, 1);
+        parcel.writeParcelable(this.destinationLocation, 1);
         parcel.writeInt(this.Type);
     }
 }

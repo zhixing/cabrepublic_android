@@ -2,6 +2,7 @@ package sg.edu.nus.cabrepublic;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.app.SearchManager;
@@ -14,6 +15,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,12 +24,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import sg.edu.nus.cabrepublic.models.PickUpLocation;
 import sg.edu.nus.cabrepublic.utilities.PlaceProvider;
 
 
 public class SearchPlacesActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
     GoogleMap mGoogleMap;
+    private PickUpLocation newlySelectedLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,16 +113,37 @@ public class SearchPlacesActivity extends FragmentActivity implements LoaderCall
         MarkerOptions markerOptions = null;
         LatLng position = null;
         mGoogleMap.clear();
+
+        newlySelectedLocation = new PickUpLocation("", 0, 0);
+
         while(c.moveToNext()){
             markerOptions = new MarkerOptions();
             position = new LatLng(Double.parseDouble(c.getString(1)),Double.parseDouble(c.getString(2)));
             markerOptions.position(position);
             markerOptions.title(c.getString(0));
             mGoogleMap.addMarker(markerOptions);
+
+            newlySelectedLocation.locationName = c.getString(0);
+            newlySelectedLocation.longitude = Double.parseDouble(c.getString(2));
+            newlySelectedLocation.latitude = Double.parseDouble(c.getString(1));
         }
         if(position!=null){
-            CameraUpdate cameraPosition = CameraUpdateFactory.newLatLng(position);
+            CameraUpdate cameraPosition = CameraUpdateFactory.newLatLngZoom(position, (float) 13.0);
             mGoogleMap.animateCamera(cameraPosition);
         }
+    }
+
+    public void confirmButtonPressed(View v){
+        // Inform the previous activity:
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("newLocation",(Parcelable)newlySelectedLocation);
+        setResult(RESULT_OK,returnIntent);
+        finish();
+    }
+
+    public void cancelButtonPressed(View v){
+        Intent returnIntent = new Intent();
+        setResult(RESULT_CANCELED,returnIntent);
+        finish();
     }
 }
