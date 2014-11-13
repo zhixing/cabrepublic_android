@@ -11,7 +11,7 @@
     <string name="header_name_of_edstination_map">To:</string>
     <string name="title_activity_matching_process">matchingProcessActivity</string>
     <string name="title_activity_preference">Preference for sharing a cab</string>
-    <string name="title_activity_setting">Settings</string>
+    <string name="title_activity_setting">Please update your info</string>
     <string name="title_activity_pick_up_location_list">Pick Up Locations Nearby</string>
     <string name="search_hint">Search Places</string>
     <string name="search_settings">Search Places</string>

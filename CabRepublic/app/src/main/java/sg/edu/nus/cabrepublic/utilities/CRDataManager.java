@@ -78,10 +78,6 @@ public class CRDataManager {
                 completion.sendMessage(Message.obtain(null, 0, null));
                 currentUser = user.User;
                 currentUser.Email = userEmail;
-
-                // TODO: these should be retrieved from coalition server or GPS:
-                currentUser.Name = "Peter Lim";
-                currentUser.pickUpLocation = CRDataManager.getInstance().getPickUpLocations().get(0);
             }
 
             @Override
