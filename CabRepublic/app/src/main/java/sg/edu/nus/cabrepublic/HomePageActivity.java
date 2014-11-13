@@ -135,8 +135,9 @@ public class HomePageActivity extends Activity {
 
         onpickUpLocationEditButton.setText(CRDataManager.getInstance().currentUser.pickUpLocation.locationName);
 
-        destinationLocationEditButton.setText("Please Select");
-        CRDataManager.getInstance().currentUser.destinationLocation = null;
+        PickUpLocation deafultDestination = CRDataManager.getInstance().getPickUpLocations().get(6);
+        destinationLocationEditButton.setText(deafultDestination.locationName);
+        CRDataManager.getInstance().currentUser.destinationLocation = deafultDestination;
     }
 
     private void centerMapOnMyLocation() {
@@ -338,10 +339,10 @@ public class HomePageActivity extends Activity {
                         CRDataManager.getInstance().pollMatchStatusWithCompletion(innerHandler);
                     }
                 };
-
+                poller = new android.os.Handler();
                 if (qualifiedEmails.size() == 0) {
 
-                    poller = new android.os.Handler();
+
 
                     poller.postDelayed(runnable, interval);
                 } else {
