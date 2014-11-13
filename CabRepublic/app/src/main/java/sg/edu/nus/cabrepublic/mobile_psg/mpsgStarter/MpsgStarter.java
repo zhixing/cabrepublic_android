@@ -1,16 +1,13 @@
 package sg.edu.nus.cabrepublic.mobile_psg.mpsgStarter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
 import java.util.HashMap;
 
-import sg.edu.nus.cabrepublic.HomePageActivity;
 import sg.edu.nus.cabrepublic.mobile_psg.sensorMonitor.ContextUpdatingService;
 
 public class MpsgStarter {

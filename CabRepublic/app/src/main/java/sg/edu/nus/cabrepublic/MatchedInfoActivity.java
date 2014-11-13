@@ -45,12 +45,15 @@ public class MatchedInfoActivity extends Activity {
         String name = intent.getStringExtra("name");
         String age = intent.getStringExtra("age");
         String urlOfProfilePicture = intent.getStringExtra("urlOfProfilePicture");
-        String handphoneNumber = intent.getStringExtra("handphoneNumber");
+        String handphoneNumber = intent.getStringExtra("number");
+        String pickUpName = intent.getStringExtra("pickup_name");
+        long pickUpLongtitude = Long.parseLong(intent.getStringExtra("pickup_longtitude"));
+        long pickUpLatitude = Long.parseLong(intent.getStringExtra("pickup_latitude"));
 
         this.initializeNameAndAgeTextView(name, age);
         this.intializeProfilePicFromURL(urlOfProfilePicture);
         this.initializeContactButtons(handphoneNumber);
-        this.initializeGoogleMap();
+        this.initializeGoogleMap(pickUpName, pickUpLongtitude, pickUpLatitude);
         final CountDownTimer countDownTimer = this.initializeCountDownTextView();
         ImageButton cancelButton = (ImageButton) findViewById(R.id.cancelButton);
 
@@ -114,11 +117,15 @@ public class MatchedInfoActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initializeGoogleMap() {
+    private void initializeGoogleMap(String pickUpName, Long longtitude, Long latitude) {
+        Location pickUpLocation = new Location("");
+        pickUpLocation.setLongitude(longtitude);
+        pickUpLocation.setLongitude(latitude);
+
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.pickUpLocationMap)).getMap();
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
-
+        this.drawMarker(pickUpName, pickUpLocation);
     }
 
     private void intializeProfilePicFromURL(String url) {
@@ -211,7 +218,7 @@ public class MatchedInfoActivity extends Activity {
         return countDownTimer;
     }
 
-    private void drawMarker(Location location){
+    private void drawMarker(String title, Location location){
         map.clear();
         //  convert the location object to a LatLng object that can be used by the map API
         LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
@@ -221,8 +228,9 @@ public class MatchedInfoActivity extends Activity {
 
         // add a marker to the map indicating our current position
         map.addMarker(new MarkerOptions()
+                .title(title)
                 .position(currentPosition)
-                .snippet("Lat:" + location.getLatitude() + "Lng:"+ location.getLongitude()));
+                .snippet("Lat:" + location.getLatitude() + "Lng:" + location.getLongitude()));
     }
 
     private void vibratePhone(int miliseconds) {
