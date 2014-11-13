@@ -338,10 +338,10 @@ public class HomePageActivity extends Activity {
                         CRDataManager.getInstance().pollMatchStatusWithCompletion(innerHandler);
                     }
                 };
-
+                poller = new android.os.Handler();
                 if (qualifiedEmails.size() == 0) {
 
-                    poller = new android.os.Handler();
+
 
                     poller.postDelayed(runnable, interval);
                 } else {
