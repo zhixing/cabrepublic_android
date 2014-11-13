@@ -64,7 +64,7 @@ public class SettingActivity extends Activity {
 
             MpsgStarter starter = new MpsgStarter(this);
             User user = CRDataManager.getInstance().currentUser;
-            starter.initializeMPSG("Whatever",
+            starter.initializeMPSG(user.Email,
                     "person.name::" + name +
                     ",person.age::" + age +
                     ",person.gender::" + gender +

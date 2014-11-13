@@ -102,7 +102,7 @@ public class HomePageActivity extends Activity {
         map.setMyLocationEnabled(true);
         android.os.Handler delayedHandler = new android.os.Handler(){
 
-        }
+        };
         centerMapOnMyLocation();
     }
 
@@ -274,7 +274,7 @@ public class HomePageActivity extends Activity {
     private void queryCoalitionServerForMatch(){
         final User user = CRDataManager.getInstance().currentUser;
         // Query the coalition server for a few potential email addresses that fits my preference:
-        starter.sendQuery("Whatever" + ";query:select person.email,person.gender,person.destination,person.location,person.gender_preference,person.number,person.name,person.age,person.age_max,person.age_min"
+        starter.sendQuery(user.Email + ";query:select person.email,person.gender,person.destination,person.location,person.gender_preference,person.number,person.name,person.age,person.age_max,person.age_min"
                 + " from person where person.group = \"eight\""
         , new android.os.Handler(){
             @Override
@@ -287,23 +287,32 @@ public class HomePageActivity extends Activity {
                     Set<String> s = result.keySet();
                     for (String key : s) {
                         HashMap<String, String> person = result.get(key);
-                        PickUpLocation otherLocation = new PickUpLocation(person.get("person.location"));
-                        float[] startDistance = new float[2];
-                        Location.distanceBetween(user.mLocation.latitude, user.mLocation.longitude, otherLocation.latitude, otherLocation.longitude, startDistance);
-                        if (startDistance[0] < 500) {
-                            PickUpLocation otherDestination = new PickUpLocation(person.get("person.destination"));
-                            float[] destDistance = new float[2];
-                            Location.distanceBetween(user.destinationLocation.latitude, user.destinationLocation.longitude, otherDestination.latitude, otherDestination.longitude, destDistance);
-                            if (destDistance[0] < 1000) {
-                                if (user.Gender_preference == 0 || user.Gender_preference == Integer.valueOf(person.get("person.gender"))) {
-                                    if (Integer.valueOf(person.get("person.gender_preference")) == 0 || user.Gender == Integer.valueOf(person.get("person.gender"))) {
-                                        if (user.Age > Integer.valueOf(person.get("person.age_min")) && user.Age < Integer.valueOf(person.get("person.age_max")) && Integer.valueOf(person.get("person.age")) > user.Age_min && Integer.valueOf(person.get("person.age")) < user.Age_max) {
-                                            qualifiedEmails.add(person.get("person.email"));
+                        String loc = person.get("person.location");
+                        if (!loc.equalsIgnoreCase("nil")) {
+                            PickUpLocation otherLocation = new PickUpLocation(person.get("person.location"));
+                            float[] startDistance = new float[2];
+                            Location.distanceBetween(user.mLocation.latitude, user.mLocation.longitude, otherLocation.latitude, otherLocation.longitude, startDistance);
+                            if (startDistance[0] < 500) {
+                                String dest = person.get("person.destination");
+                                if (!dest.equalsIgnoreCase("nil")) {
+                                    PickUpLocation otherDestination = new PickUpLocation(person.get("person.destination"));
+                                    float[] destDistance = new float[2];
+                                    Location.distanceBetween(user.destinationLocation.latitude, user.destinationLocation.longitude, otherDestination.latitude, otherDestination.longitude, destDistance);
+                                    if (destDistance[0] < 1000) {
+                                        if (user.Gender_preference == 0 || user.Gender_preference == Integer.valueOf(person.get("person.gender"))) {
+                                            if (Integer.valueOf(person.get("person.gender_preference")) == 0 || user.Gender == Integer.valueOf(person.get("person.gender"))) {
+                                                if (user.Age > Integer.valueOf(person.get("person.age_min")) && user.Age < Integer.valueOf(person.get("person.age_max")) && Integer.valueOf(person.get("person.age")) > user.Age_min && Integer.valueOf(person.get("person.age")) < user.Age_max) {
+                                                    qualifiedEmails.add(person.get("person.email"));
+                                                }
+                                            }
                                         }
                                     }
                                 }
+
                             }
                         }
+
+
                     }
                 }
                 final long interval = 2000;
