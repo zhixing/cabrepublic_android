@@ -133,11 +133,11 @@ public class HomePageActivity extends Activity {
 
         preferenceButton.setText(preferenceString);
 
+        CRDataManager.getInstance().currentUser.pickUpLocation = CRDataManager.getInstance().getPickUpLocations().get(0);
+
         onpickUpLocationEditButton.setText(CRDataManager.getInstance().currentUser.pickUpLocation.locationName);
 
-        PickUpLocation deafultDestination = CRDataManager.getInstance().getPickUpLocations().get(6);
-        destinationLocationEditButton.setText(deafultDestination.locationName);
-        CRDataManager.getInstance().currentUser.destinationLocation = deafultDestination;
+        destinationLocationEditButton.setText("Please select");
     }
 
     private void centerMapOnMyLocation() {

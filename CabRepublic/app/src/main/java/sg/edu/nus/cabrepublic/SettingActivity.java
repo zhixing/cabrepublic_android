@@ -1,6 +1,7 @@
 package sg.edu.nus.cabrepublic;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -77,7 +78,14 @@ public class SettingActivity extends Activity {
                     ",person.age_min::" + user.Age_min +
                     ",person.group::eight"
                     , "PERSON");
-            CRDataManager.getInstance().currentUser.Age = age;
+
+            user.Age = age;
+            user.Gender = gender;
+            user.Name = name;
+            user.Phone_number = number;
+
+            Intent intent = new Intent(SettingActivity.this, HomePageActivity.class);
+            startActivity(intent);
         }
     }
 }

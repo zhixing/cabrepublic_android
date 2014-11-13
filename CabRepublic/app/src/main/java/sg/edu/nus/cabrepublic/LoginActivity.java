@@ -59,7 +59,7 @@ public class LoginActivity extends Activity {
                 public void handleMessage(Message userMsg) {
                     if (userMsg.what == 0) {
                         if (CRDataManager.getInstance().currentUser.Type == 0) {
-                            Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, SettingActivity.class);
                             ViewHelper.getInstance().toastMessage(LoginActivity.this, "Successfully logged in");
                             startActivity(intent);
                         } else {
@@ -67,7 +67,6 @@ public class LoginActivity extends Activity {
                             ViewHelper.getInstance().toastMessage(LoginActivity.this, "Successfully logged in");
                             startActivity(intent);
                         }
-
                     } else {
                         ViewHelper.getInstance().handleRequestFailure(LoginActivity.this, userMsg.what, (String) userMsg.obj);
                     }

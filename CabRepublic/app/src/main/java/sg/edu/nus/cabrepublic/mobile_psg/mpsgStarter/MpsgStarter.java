@@ -76,6 +76,7 @@ public class MpsgStarter {
             // TODO: Code for starting MPSG old directly without proxy
         }
         Log.d("EXPERIMENTAL_RESULTS", "Total response time for registration: " + Math.abs(registerEndTime - registerStartTime));
+
     }
 
     public void sendQuery(final String query, Handler handler) {

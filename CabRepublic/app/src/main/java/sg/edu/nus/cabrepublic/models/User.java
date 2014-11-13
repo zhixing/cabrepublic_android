@@ -14,11 +14,13 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
     public int Gender;
     public int Age;
     public String Name;
-    public String Email;
+    public String Phone_number;
 
-    // Inferred each time:
-    public PickUpLocation pickUpLocation;
-    public PickUpLocation destinationLocation;
+    // User need to input each time:
+    public String Email; // Input at login
+    public PickUpLocation pickUpLocation; // Determined by current location
+    public PickUpLocation destinationLocation; // Different each time of use
+    public PickUpLocation mLocation; // Current location
 
     // Data returned by the server:
     public int Age_min;
@@ -26,10 +28,9 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
     public int Gender_preference;
     public int Type; // (0 for ordinary user, 1 for taxi driver)
     public String Access_token;
-    public PickUpLocation mLocation;
 
     public User(String name, String email, String access_token, int age_min, int age_max, int gender, int age,
-                int gender_preference, PickUpLocation pickUpLocation, int type) {
+                int gender_preference, PickUpLocation pickUpLocation, int type, String phone_number) {
         this.Name = name;
         this.Email = email;
         this.Access_token = access_token;
@@ -40,6 +41,7 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
         this.Gender_preference = gender_preference;
         this.pickUpLocation = pickUpLocation;
         this.Type = type;
+        this.Phone_number = phone_number;
     }
 
     public User(Parcel parcel) {
