@@ -31,6 +31,7 @@ public class MpsgStarter {
     public MpsgStarter(Context context) {
         myContext = context;
         mpsgStarter = this;
+        mpsg = new MPSG(context, SERVERPORT);
     }
 
     public static MpsgStarter getInstance() {

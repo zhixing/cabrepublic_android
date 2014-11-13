@@ -36,6 +36,12 @@ public class PickUpLocation extends CRBaseModel implements Parcelable, Serializa
         this.latitude = parcel.readDouble();
     }
 
+    public PickUpLocation(String s) {
+        String[] coordinates = s.split("-");
+        this.longitude = Double.valueOf(coordinates[0]);
+        this.latitude = Double.valueOf(coordinates[1]);
+    }
+
     @Override
     public int describeContents() {
         return 0;

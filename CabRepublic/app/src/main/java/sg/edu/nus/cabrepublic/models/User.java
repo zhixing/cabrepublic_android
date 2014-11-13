@@ -26,6 +26,7 @@ public class User extends CRBaseModel implements Parcelable, Serializable {
     public int Gender_preference;
     public int Type; // (0 for ordinary user, 1 for taxi driver)
     public String Access_token;
+    public PickUpLocation mLocation;
 
     public User(String name, String email, String access_token, int age_min, int age_max, int gender, int age,
                 int gender_preference, PickUpLocation pickUpLocation, int type) {

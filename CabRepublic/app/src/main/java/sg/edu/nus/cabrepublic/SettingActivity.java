@@ -10,6 +10,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import sg.edu.nus.cabrepublic.mobile_psg.mpsgStarter.MPSG;
+import sg.edu.nus.cabrepublic.mobile_psg.mpsgStarter.MpsgStarter;
+import sg.edu.nus.cabrepublic.models.User;
+import sg.edu.nus.cabrepublic.utilities.CRDataManager;
+
 
 public class SettingActivity extends Activity {
     private Spinner spinner;
@@ -53,10 +58,26 @@ public class SettingActivity extends Activity {
         } else {
             EditText nameField = (EditText) findViewById(R.id.name_content);
             String name = nameField.getText().toString();
-            int gender = spinner.getSelectedItemPosition();
+            int gender = spinner.getSelectedItemPosition() + 1;
             EditText numberField = (EditText) findViewById(R.id.number_content);
             String number = numberField.getText().toString();
-            
+
+            MpsgStarter starter = new MpsgStarter(this);
+            User user = CRDataManager.getInstance().currentUser;
+            starter.initializeMPSG("Whatever",
+                    "person.name::" + name +
+                    ",person.age::" + age +
+                    ",person.gender::" + gender +
+                    ",person.number::" + number +
+                    ",person.email::" + user.Email +
+                    ",person.location::nil" +
+                    ",person.destination::nil" +
+                    ",person.gender_preference::" + user.Gender_preference +
+                    ",person.age_max::" + user.Age_max +
+                    ",person.age_min::" + user.Age_min +
+                    ",person.group::eight"
+                    , "PERSON");
+            CRDataManager.getInstance().currentUser.Age = age;
         }
     }
 }

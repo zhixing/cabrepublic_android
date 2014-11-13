@@ -48,9 +48,7 @@ public class LoginActivity extends Activity {
         String userEmail = userEmailText.getText().toString();
         String userPassword = userPasswordText.getText().toString();
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-            showSignUpErrorMessage("Have you input the email correctly?");
-        } else if (userEmail.toString().equals("")) {
+        if (userEmail.toString().equals("")) {
             showSignUpErrorMessage("Please input an email.");
         } else if (userPassword.equals("")) {
             showSignUpErrorMessage("Please input a password.");
