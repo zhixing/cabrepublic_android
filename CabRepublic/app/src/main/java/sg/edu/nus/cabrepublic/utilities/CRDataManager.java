@@ -180,7 +180,7 @@ public class CRDataManager {
 
             }
         };
-        crService.findMatching(currentUser.Access_token, strJoin(emails, "$"), callback);
+        crService.findMatching(currentUser.Access_token, strJoin(emails, "-"), callback);
     }
 
     public void logout(Context context) {
