@@ -39,7 +39,7 @@ public class CRDataManager {
     public static final int UNAUTHORIZED = 2;
     public static final int REASONED_ERROR = 3;
     public static final int INTERNAL_ERROR = 4;
-    public static final int NOT_FOUND = 5;
+        public static final int NOT_FOUND = 5;
     public static final int UNKNOWN = 6;
 
     public static final int GENDER_MALE = 0;
@@ -166,7 +166,7 @@ public class CRDataManager {
         crService.createIntention(currentUser.Access_token, lat, lon, callback);
     }
 
-    public void findMatchingWithCompletion(String[] emails, final Handler completion) {
+    public void findMatchingWithCompletion(ArrayList<String> emails, final Handler completion) {
         Callback<FindMatchResponse> callback = new Callback<FindMatchResponse>() {
             @Override
             public void success(FindMatchResponse findMatchResponse, Response response) {
@@ -243,12 +243,12 @@ public class CRDataManager {
         return pickUpLocations;
     }
 
-    public String strJoin(String[] aArr, String sSep) {
+    public String strJoin(ArrayList<String> aArr, String sSep) {
         StringBuilder sbStr = new StringBuilder();
-        for (int i = 0, il = aArr.length; i < il; i++) {
+        for (int i = 0, il = aArr.size(); i < il; i++) {
             if (i > 0)
                 sbStr.append(sSep);
-            sbStr.append(aArr[i]);
+            sbStr.append(aArr.get(i));
         }
         return sbStr.toString();
     }

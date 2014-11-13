@@ -245,9 +245,12 @@ public class MPSG {
 		// Send the query through the socket connection with proxy
 		try {
 			Log.d("MPSG", "Sending the query to the proxy");
-            Log.d("QUERY",mpsgName + ";query:" + queryString);
-			conn.sendQuery(mpsgName + ";query:" + queryString);
+            Log.d("QUERY", queryString);
+			conn.sendQuery(queryString);
 		} catch (Exception e) {
+            Log.d("DDDDDD",             e.getClass().getName()
+            );
+            e.printStackTrace();
 			Log.d("MPSG", "Error in sending query to the proxy");
 		}
 	}

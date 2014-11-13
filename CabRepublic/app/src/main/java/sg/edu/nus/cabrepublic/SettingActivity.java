@@ -10,15 +10,20 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import sg.edu.nus.cabrepublic.mobile_psg.mpsgStarter.MPSG;
+import sg.edu.nus.cabrepublic.mobile_psg.mpsgStarter.MpsgStarter;
+import sg.edu.nus.cabrepublic.models.User;
+import sg.edu.nus.cabrepublic.utilities.CRDataManager;
+
 
 public class SettingActivity extends Activity {
-
+    private Spinner spinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        Spinner spinner = (Spinner) findViewById(R.id.gender_content);
+        spinner = (Spinner) findViewById(R.id.gender_content);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.gender_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -51,7 +56,28 @@ public class SettingActivity extends Activity {
         if (age < 0 || age > 100) {
             Toast.makeText(this, "Age must be between 0 and 100.", Toast.LENGTH_LONG).show();
         } else {
-            
+            EditText nameField = (EditText) findViewById(R.id.name_content);
+            String name = nameField.getText().toString();
+            int gender = spinner.getSelectedItemPosition() + 1;
+            EditText numberField = (EditText) findViewById(R.id.number_content);
+            String number = numberField.getText().toString();
+
+            MpsgStarter starter = new MpsgStarter(this);
+            User user = CRDataManager.getInstance().currentUser;
+            starter.initializeMPSG(user.Email,
+                    "person.name::" + name +
+                    ",person.age::" + age +
+                    ",person.gender::" + gender +
+                    ",person.number::" + number +
+                    ",person.email::" + user.Email +
+                    ",person.location::nil" +
+                    ",person.destination::nil" +
+                    ",person.gender_preference::" + user.Gender_preference +
+                    ",person.age_max::" + user.Age_max +
+                    ",person.age_min::" + user.Age_min +
+                    ",person.group::eight"
+                    , "PERSON");
+            CRDataManager.getInstance().currentUser.Age = age;
         }
     }
 }

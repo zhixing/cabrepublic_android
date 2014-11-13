@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,11 +28,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
+import sg.edu.nus.cabrepublic.mobile_psg.mpsgStarter.MpsgStarter;
+import sg.edu.nus.cabrepublic.models.FindMatchResponse;
 import sg.edu.nus.cabrepublic.models.PickUpLocation;
 import sg.edu.nus.cabrepublic.models.User;
 import sg.edu.nus.cabrepublic.utilities.CRDataManager;
@@ -40,6 +46,7 @@ import sg.edu.nus.cabrepublic.utilities.ViewHelper;
 
 public class HomePageActivity extends Activity {
     private GoogleMap map;
+    private MpsgStarter starter;
     private RoundedImageView profilePicture;
     private TextView userName;
     private Button preferenceButton;
@@ -193,6 +200,21 @@ public class HomePageActivity extends Activity {
 
     public void onStartSharingButtonClicked(View v){
         User currentUser = CRDataManager.getInstance().currentUser;
+        starter = new MpsgStarter(this);
+        map.setMyLocationEnabled(true);
+
+        Location location = map.getMyLocation();
+        currentUser.mLocation = new PickUpLocation(String.valueOf(location.getLongitude()) + "-" + String.valueOf(location.getLatitude()));
+
+        if (location != null) {
+            Toast.makeText(this, "Location is not null!", Toast.LENGTH_LONG).show();
+            starter.updateDynamicContextAttribute("person.location", String.valueOf(location.getLongitude()) + "-" + String.valueOf(location.getLatitude()));
+
+        } else {
+            Toast.makeText(this, "Location is null!", Toast.LENGTH_LONG).show();
+        }
+
+
         if (currentUser.destinationLocation == null){
             ViewHelper.getInstance().toastMessage(HomePageActivity.this, "Please select your destination.");
         } else {
@@ -229,9 +251,13 @@ public class HomePageActivity extends Activity {
             @Override
             public void handleMessage(Message userMsg) {
                 if (userMsg.what == 0) {
+                    if (poller !=  null) {
+                        poller.removeCallbacksAndMessages(null);
+                    }
+
 
                     countDownTimer.cancel();
-                    poller.removeCallbacksAndMessages(null);
+
                     cancelButton.setVisibility(View.INVISIBLE);
                     countDownTextView.setVisibility(View.INVISIBLE);
                     buttonsHolder.setVisibility(View.INVISIBLE);
@@ -246,57 +272,111 @@ public class HomePageActivity extends Activity {
     }
 
     private void queryCoalitionServerForMatch(){
+        final User user = CRDataManager.getInstance().currentUser;
         // Query the coalition server for a few potential email addresses that fits my preference:
-        // If NOT Found:
-        final long interval = 2000;
-        poller = new android.os.Handler();
-        final Runnable runnable = new Runnable() {
-            final Runnable innerThis = this;
+        starter.sendQuery(user.Email + ";query:select person.email,person.gender,person.destination,person.location,person.gender_preference,person.number,person.name,person.age,person.age_max,person.age_min"
+                + " from person where person.group = \"eight\""
+        , new android.os.Handler(){
             @Override
-            public void run() {
-                android.os.Handler innerHandler = new android.os.Handler() {
-                    @Override
-                    public void handleMessage(Message userMsg) {
-                        // Found a match:
-                        if (userMsg.what == 0) {
-                            //Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
-                            //startActivity(intent);
-                        } else if (userMsg.what == 1) {
-                            // 404 not found
-                            poller.postDelayed(innerThis, interval);
-                        } else{
-                            ViewHelper.getInstance().handleRequestFailure(HomePageActivity.this, userMsg.what, (String) userMsg.obj);
+            public void handleMessage(Message msg) {
+                // Found a match:
+                final HashMap<String, HashMap<String, String>> result = (HashMap<String, HashMap<String, String>>) msg.obj;
+                ArrayList<String> qualifiedEmails = new ArrayList<String>();
+                if (msg.what == 0) {
+
+                    Set<String> s = result.keySet();
+                    for (String key : s) {
+                        HashMap<String, String> person = result.get(key);
+                        String loc = person.get("person.location");
+                        if (!loc.equalsIgnoreCase("nil")) {
+                            PickUpLocation otherLocation = new PickUpLocation(person.get("person.location"));
+                            float[] startDistance = new float[2];
+                            Location.distanceBetween(user.mLocation.latitude, user.mLocation.longitude, otherLocation.latitude, otherLocation.longitude, startDistance);
+                            if (startDistance[0] < 500) {
+                                String dest = person.get("person.destination");
+                                if (!dest.equalsIgnoreCase("nil")) {
+                                    PickUpLocation otherDestination = new PickUpLocation(person.get("person.destination"));
+                                    float[] destDistance = new float[2];
+                                    Location.distanceBetween(user.destinationLocation.latitude, user.destinationLocation.longitude, otherDestination.latitude, otherDestination.longitude, destDistance);
+                                    if (destDistance[0] < 1000) {
+                                        if (user.Gender_preference == 0 || user.Gender_preference == Integer.valueOf(person.get("person.gender"))) {
+                                            if (Integer.valueOf(person.get("person.gender_preference")) == 0 || user.Gender == Integer.valueOf(person.get("person.gender"))) {
+                                                if (user.Age > Integer.valueOf(person.get("person.age_min")) && user.Age < Integer.valueOf(person.get("person.age_max")) && Integer.valueOf(person.get("person.age")) > user.Age_min && Integer.valueOf(person.get("person.age")) < user.Age_max) {
+                                                    qualifiedEmails.add(person.get("person.email"));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
                         }
+
+
+                    }
+                }
+                final long interval = 2000;
+                final Runnable runnable = new Runnable() {
+                    final Runnable innerThis = this;
+                    @Override
+                    public void run() {
+                        android.os.Handler innerHandler = new android.os.Handler() {
+                            @Override
+                            public void handleMessage(Message userMsg) {
+                                // Found a match:
+                                if (userMsg.what == 0) {
+                                    //Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
+                                    //startActivity(intent);
+                                } else if (userMsg.what == 1) {
+                                    // 404 not found
+                                    poller.postDelayed(innerThis, interval);
+                                } else{
+                                    ViewHelper.getInstance().handleRequestFailure(HomePageActivity.this, userMsg.what, (String) userMsg.obj);
+                                }
+                            }
+                        };
+                        CRDataManager.getInstance().pollMatchStatusWithCompletion(innerHandler);
                     }
                 };
-                CRDataManager.getInstance().pollMatchStatusWithCompletion(innerHandler);
-            }
-        };
-        poller.postDelayed(runnable, interval);
 
-        // If emails were found from coalition:
-        /*
-        pollAppServerForMatchTimer.cancel();
-        android.os.Handler pollMatchFromAppServerHandler = new android.os.Handler() {
-            @Override
-            public void handleMessage(Message userMsg) {
-                if (userMsg.what == 0) {
+                if (qualifiedEmails.size() == 0) {
 
-                    Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
-                    startActivity(intent);
+                    poller = new android.os.Handler();
 
+                    poller.postDelayed(runnable, interval);
                 } else {
-                    ViewHelper.getInstance().handleRequestFailure(HomePageActivity.this, userMsg.what, (String) userMsg.obj);
+                    android.os.Handler findMatchFromAppServerHandler = new android.os.Handler() {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            if (msg.what == 0) {
+                                countDownTimer.cancel();
+                                FindMatchResponse response = (FindMatchResponse) msg.obj;
+                                Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
+                                intent.putExtra("name", result.get(response.Email).get("name"));
+                                intent.putExtra("email", response.Email);
+                                intent.putExtra("pickup_location", response.Pickup_location);
+                                intent.putExtra("number", result.get(response.Email).get("number"));
+                                startActivity(intent);
+                            } else {
+                                poller.postDelayed(runnable, interval);
+                            }
+                        }
+                    };
+                    CRDataManager.getInstance().findMatchingWithCompletion(qualifiedEmails, findMatchFromAppServerHandler);
                 }
             }
-        };
-        //CRDataManager.getInstance().findMatchingWithCompletion, pollMatchFromAppServerHandler);
-        */
+
+        });
+        // If NOT Found:
+
+
+        // If emails were found from coalition:
+
     }
 
     private CountDownTimer initializeCountDownTextView() {
         countDownTextView = (TextView) findViewById(R.id.countDownTextView);
-        final CountDownTimer countDownTimer = new CountDownTimer(10000, 1000) {
+        final CountDownTimer countDownTimer = new CountDownTimer(300000, 1000) {
             int numberOfDots = 0;
             public void onTick(long millisUntilFinished) {
                 //countDownTextView.setText("seconds remaining: " + millisUntilFinished / 1000);
@@ -351,6 +431,7 @@ public class HomePageActivity extends Activity {
                 CRDataManager.getInstance().currentUser.destinationLocation = result;
                 destinationLocationEditButton.setText(result.locationName);
                 drawStartAndEndMarkers();
+                MpsgStarter.getInstance().updateDynamicContextAttribute("person.destination", String.valueOf(CRDataManager.getInstance().currentUser.destinationLocation.longitude + "-" + CRDataManager.getInstance().currentUser.destinationLocation.latitude));
             }
             if (resultCode == RESULT_CANCELED) {
 
