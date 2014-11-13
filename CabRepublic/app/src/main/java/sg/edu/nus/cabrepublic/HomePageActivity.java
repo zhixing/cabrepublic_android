@@ -303,7 +303,10 @@ public class HomePageActivity extends Activity {
                                         if (user.Gender_preference == 0 || user.Gender_preference == Integer.valueOf(person.get("person.gender"))) {
                                             if (Integer.valueOf(person.get("person.gender_preference")) == 0 || user.Gender == Integer.valueOf(person.get("person.gender"))) {
                                                 if (user.Age > Integer.valueOf(person.get("person.age_min")) && user.Age < Integer.valueOf(person.get("person.age_max")) && Integer.valueOf(person.get("person.age")) > user.Age_min && Integer.valueOf(person.get("person.age")) < user.Age_max) {
-                                                    qualifiedEmails.add(person.get("person.email"));
+                                                    if (!person.get("person.email").equalsIgnoreCase(user.Email)) {
+                                                        qualifiedEmails.add(person.get("person.email"));
+                                                    }
+
                                                 }
                                             }
                                         }
@@ -363,7 +366,8 @@ public class HomePageActivity extends Activity {
         countDownTimer.cancel();
         FindMatchResponse response = (FindMatchResponse) userMsg.obj;
         Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
-        intent.putExtra("name", result.get(response.Email).get("person.name"));
+        HashMap<String, String> map1 = result.get(response.Email);
+        intent.putExtra("name", map1.get("person.name"));
         intent.putExtra("email", response.Email);
         intent.putExtra("age", result.get(response.Email).get("person.age"));
 

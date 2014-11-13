@@ -47,15 +47,15 @@ public class MatchedInfoActivity extends Activity {
         String urlOfProfilePicture = intent.getStringExtra("urlOfProfilePicture");
         String handphoneNumber = intent.getStringExtra("number");
         String pickUpName = intent.getStringExtra("pickup_name");
-        long pickUpLongtitude = Long.parseLong(intent.getStringExtra("pickup_longitude"));
-        long pickUpLatitude = Long.parseLong(intent.getStringExtra("pickup_latitude"));
+        double pickUpLongtitude = intent.getDoubleExtra("pickup_longitude", 0.0);
+        double pickUpLatitude = intent.getDoubleExtra("pickup_latitude", 0.0);
 
         this.initializeNameAndAgeTextView(name, age);
         this.intializeProfilePicFromURL(urlOfProfilePicture);
         this.initializeContactButtons(handphoneNumber);
         this.initializeGoogleMap(pickUpName, pickUpLongtitude, pickUpLatitude);
         final CountDownTimer countDownTimer = this.initializeCountDownTextView();
-        ImageButton cancelButton = (ImageButton) findViewById(R.id.cancelButton);
+        ImageButton cancelButton = (ImageButton) findViewById(R.id.cancelBtn);
 
         final Handler handler = new Handler(){
             @Override
@@ -117,10 +117,10 @@ public class MatchedInfoActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initializeGoogleMap(String pickUpName, Long longtitude, Long latitude) {
+    private void initializeGoogleMap(String pickUpName, double longtitude, double latitude) {
         Location pickUpLocation = new Location("");
         pickUpLocation.setLongitude(longtitude);
-        pickUpLocation.setLongitude(latitude);
+        pickUpLocation.setLatitude(latitude);
 
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.pickUpLocationMap)).getMap();
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
