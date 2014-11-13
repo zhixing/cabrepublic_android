@@ -8,6 +8,12 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 
 import retrofit.Callback;
@@ -276,5 +282,48 @@ public class CRDataManager {
             sbStr.append(aArr.get(i));
         }
         return sbStr.toString();
+    }
+
+    public void storeUserDataToFile(Context context) {
+        try {
+            String FILENAME = "userdata" + currentUser.Email;
+            FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+
+            os.writeObject(currentUser.Age);
+            os.writeObject(currentUser.Gender);
+            os.writeObject(currentUser.Phone_number);
+            os.writeObject(currentUser.Name);
+
+            os.flush();
+            os.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadUserDataFromFile(Context context) {
+        ObjectInputStream input;
+        String filename = "userdata" + currentUser.Email;
+
+        try {
+
+            input = new ObjectInputStream(context.openFileInput(filename));
+            currentUser.Age = (Integer) input.readObject();
+            currentUser.Gender = (Integer) input.readObject();
+            currentUser.Phone_number = (String) input.readObject();
+            currentUser.Name = (String) input.readObject();
+
+            input.close();
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

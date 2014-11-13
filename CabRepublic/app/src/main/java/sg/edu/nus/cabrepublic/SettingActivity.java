@@ -29,13 +29,35 @@ public class SettingActivity extends Activity {
                 R.array.gender_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-    }
 
+        CRDataManager.getInstance().loadUserDataFromFile(SettingActivity.this);
+
+        User user = CRDataManager.getInstance().currentUser;
+
+        if (user.Name != null){
+            EditText editText0 = (EditText)findViewById(R.id.name_content);
+            editText0.setText(user.Name);
+        }
+
+        if (user.Phone_number != null){
+            EditText editText1 = (EditText)findViewById(R.id.number_content);
+            editText1.setText(user.Phone_number);
+        }
+
+        if (user.Gender != 0) {
+            EditText editText = (EditText) findViewById(R.id.user_age_content);
+            editText.setText("" + user.Age);
+        }
+
+        Spinner spinner = (Spinner)findViewById(R.id.gender_content);
+        spinner.setSelection(user.Gender / 2);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.setting, menu);
+
         return true;
     }
 
@@ -52,7 +74,7 @@ public class SettingActivity extends Activity {
     }
 
     public void onSaveButtonClicked(View v) {
-        EditText ageField = (EditText) findViewById(R.id.age_content);
+        EditText ageField = (EditText) findViewById(R.id.user_age_content);
         final int age = Integer.valueOf(ageField.getText().toString());
         if (age < 0 || age > 100) {
             Toast.makeText(this, "Age must be between 0 and 100.", Toast.LENGTH_LONG).show();
@@ -84,6 +106,7 @@ public class SettingActivity extends Activity {
             user.Name = name;
             user.Phone_number = number;
 
+            CRDataManager.getInstance().storeUserDataToFile(SettingActivity.this);
             Intent intent = new Intent(SettingActivity.this, HomePageActivity.class);
             startActivity(intent);
         }
