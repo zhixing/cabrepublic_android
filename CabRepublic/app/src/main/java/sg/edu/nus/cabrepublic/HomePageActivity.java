@@ -100,6 +100,9 @@ public class HomePageActivity extends Activity {
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.pickUpLocationMap)).getMap();
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
+        android.os.Handler delayedHandler = new android.os.Handler(){
+
+        }
         centerMapOnMyLocation();
     }
 
@@ -145,6 +148,8 @@ public class HomePageActivity extends Activity {
 
         if (location != null) {
             myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        } else{
+            Log.d("ddd", "ddd");
         }
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 13.0));
 
