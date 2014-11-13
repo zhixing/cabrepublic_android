@@ -326,8 +326,14 @@ public class HomePageActivity extends Activity {
                             public void handleMessage(Message userMsg) {
                                 // Found a match:
                                 if (userMsg.what == 0) {
-                                    //Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
-                                    //startActivity(intent);
+                                    countDownTimer.cancel();
+                                    FindMatchResponse response = (FindMatchResponse) userMsg.obj;
+                                    Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
+                                    intent.putExtra("name", result.get(response.Email).get("person.name"));
+                                    intent.putExtra("email", response.Email);
+                                    intent.putExtra("pickup_location", response.Pickup_location);
+                                    intent.putExtra("number", result.get(response.Email).get("person.number"));
+                                    startActivity(intent);
                                 } else if (userMsg.what == 1) {
                                     // 404 not found
                                     poller.postDelayed(innerThis, interval);
@@ -353,10 +359,10 @@ public class HomePageActivity extends Activity {
                                 countDownTimer.cancel();
                                 FindMatchResponse response = (FindMatchResponse) msg.obj;
                                 Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
-                                intent.putExtra("name", result.get(response.Email).get("name"));
+                                intent.putExtra("name", result.get(response.Email).get("person.name"));
                                 intent.putExtra("email", response.Email);
                                 intent.putExtra("pickup_location", response.Pickup_location);
-                                intent.putExtra("number", result.get(response.Email).get("number"));
+                                intent.putExtra("number", result.get(response.Email).get("person.number"));
                                 startActivity(intent);
                             } else {
                                 poller.postDelayed(runnable, interval);

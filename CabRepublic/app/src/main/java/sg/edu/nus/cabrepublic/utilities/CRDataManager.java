@@ -8,7 +8,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import retrofit.Callback;
@@ -19,7 +18,6 @@ import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import sg.edu.nus.cabrepublic.models.ErrorResponse;
 import sg.edu.nus.cabrepublic.models.FindMatchResponse;
-import sg.edu.nus.cabrepublic.models.MatchPollResponse;
 import sg.edu.nus.cabrepublic.models.PickUpLocation;
 import sg.edu.nus.cabrepublic.models.RequestError;
 import sg.edu.nus.cabrepublic.models.User;
@@ -112,9 +110,9 @@ public class CRDataManager {
     }
 
     public void pollMatchStatusWithCompletion(final Handler completion) {
-        Callback<MatchPollResponse> callback = new Callback<MatchPollResponse>() {
+        Callback<FindMatchResponse> callback = new Callback<FindMatchResponse>() {
             @Override
-            public void success(MatchPollResponse matchPollResponse, Response response) {
+            public void success(FindMatchResponse matchPollResponse, Response response) {
                 completion.sendMessage(Message.obtain(null, 0, matchPollResponse));
             }
 

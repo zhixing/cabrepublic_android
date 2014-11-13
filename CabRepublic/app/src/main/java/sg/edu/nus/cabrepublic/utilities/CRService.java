@@ -10,7 +10,6 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Query;
 import sg.edu.nus.cabrepublic.models.FindMatchResponse;
-import sg.edu.nus.cabrepublic.models.MatchPollResponse;
 import sg.edu.nus.cabrepublic.nework_data.UserResponse;
 
 /**
@@ -28,7 +27,7 @@ public interface CRService {
     void updatePreference(@Header("Authorization") String token, @Field("age_min") int ageMin, @Field("age_max") int ageMax, @Field("gender_preference") int genderPreference, Callback<Object> cb);
 
     @GET("/matchings/poll")
-    void pollMatchingStatus(@Header("Authorization") String token, Callback<MatchPollResponse> callback);
+    void pollMatchingStatus(@Header("Authorization") String token, Callback<FindMatchResponse> callback);
 
     @DELETE("/matchings")
     void deleteMatching(@Header("Authorization") String token, Callback<Object> callback);
