@@ -17,6 +17,7 @@ import retrofit.android.AndroidLog;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import sg.edu.nus.cabrepublic.models.ErrorResponse;
+import sg.edu.nus.cabrepublic.models.FindAllMatchResponse;
 import sg.edu.nus.cabrepublic.models.FindMatchResponse;
 import sg.edu.nus.cabrepublic.models.PickUpLocation;
 import sg.edu.nus.cabrepublic.models.RequestError;
@@ -181,6 +182,26 @@ public class CRDataManager {
         crService.findMatching(currentUser.Access_token, strJoin(emails, "-"), callback);
     }
 
+    public void findAllMatchingsWithCompletion(final Handler completion) {
+        Callback<FindAllMatchResponse> callback = new Callback<FindAllMatchResponse>() {
+            @Override
+            public void success(FindAllMatchResponse findAllMatchResponse, Response response) {
+                ArrayList<PickUpLocation> locations = new ArrayList<PickUpLocation>();
+                String[] locationString = findAllMatchResponse.Emails.split("-");
+                for (String loc : locationString) {
+                    locations.add(convertFromStringToPickUpLocation(loc));
+                    Log.d("ddd", "!!!!!!!!!!!!!!!!!!" + loc);
+                }
+                completion.sendMessage(Message.obtain(null, 0, locations));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                completion.sendMessage(Message.obtain(null, 1, null));
+            }
+        };
+        crService.getAllMatchings(callback);
+    }
     public void logout(Context context) {
 
     }

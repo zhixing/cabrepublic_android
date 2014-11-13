@@ -9,6 +9,7 @@ import retrofit.http.Header;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Query;
+import sg.edu.nus.cabrepublic.models.FindAllMatchResponse;
 import sg.edu.nus.cabrepublic.models.FindMatchResponse;
 import sg.edu.nus.cabrepublic.nework_data.UserResponse;
 
@@ -38,4 +39,7 @@ public interface CRService {
 
     @GET("/matchings")
     void findMatching(@Header("Authorization") String token, @Query("emails") String emails, Callback<FindMatchResponse> callback);
+
+    @GET("/matchings/all")
+    void getAllMatchings(Callback<FindAllMatchResponse> callback);
 }
