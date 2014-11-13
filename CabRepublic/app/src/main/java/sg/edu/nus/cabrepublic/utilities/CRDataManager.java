@@ -241,6 +241,16 @@ public class CRDataManager {
         return pickUpLocations;
     }
 
+    public PickUpLocation convertFromStringToPickUpLocation(String string){
+        ArrayList<PickUpLocation> locations = getPickUpLocations();
+        for (PickUpLocation loc : locations){
+            if (loc.locationName.replace(" ", "").toUpperCase().equals(string.toUpperCase())){
+                return loc;
+            }
+        }
+        return null;
+    }
+
     public String strJoin(ArrayList<String> aArr, String sSep) {
         StringBuilder sbStr = new StringBuilder();
         for (int i = 0, il = aArr.size(); i < il; i++) {

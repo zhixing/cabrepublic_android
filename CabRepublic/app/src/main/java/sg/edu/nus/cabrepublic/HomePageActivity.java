@@ -326,14 +326,7 @@ public class HomePageActivity extends Activity {
                             public void handleMessage(Message userMsg) {
                                 // Found a match:
                                 if (userMsg.what == 0) {
-                                    countDownTimer.cancel();
-                                    FindMatchResponse response = (FindMatchResponse) userMsg.obj;
-                                    Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
-                                    intent.putExtra("name", result.get(response.Email).get("person.name"));
-                                    intent.putExtra("email", response.Email);
-                                    intent.putExtra("pickup_location", response.Pickup_location);
-                                    intent.putExtra("number", result.get(response.Email).get("person.number"));
-                                    startActivity(intent);
+                                    matchIsFoundFromServer(userMsg, result);
                                 } else if (userMsg.what == 1) {
                                     // 404 not found
                                     poller.postDelayed(innerThis, interval);
@@ -347,23 +340,13 @@ public class HomePageActivity extends Activity {
                 };
                 poller = new android.os.Handler();
                 if (qualifiedEmails.size() == 0) {
-
-
-
                     poller.postDelayed(runnable, interval);
                 } else {
                     android.os.Handler findMatchFromAppServerHandler = new android.os.Handler() {
                         @Override
                         public void handleMessage(Message msg) {
                             if (msg.what == 0) {
-                                countDownTimer.cancel();
-                                FindMatchResponse response = (FindMatchResponse) msg.obj;
-                                Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
-                                intent.putExtra("name", result.get(response.Email).get("person.name"));
-                                intent.putExtra("email", response.Email);
-                                intent.putExtra("pickup_location", response.Pickup_location);
-                                intent.putExtra("number", result.get(response.Email).get("person.number"));
-                                startActivity(intent);
+                                matchIsFoundFromServer(msg, result);
                             } else {
                                 poller.postDelayed(runnable, interval);
                             }
@@ -374,11 +357,21 @@ public class HomePageActivity extends Activity {
             }
 
         });
-        // If NOT Found:
+    }
 
+    private void matchIsFoundFromServer(Message userMsg, HashMap<String, HashMap<String, String>> result){
+        countDownTimer.cancel();
+        FindMatchResponse response = (FindMatchResponse) userMsg.obj;
+        Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
+        intent.putExtra("name", result.get(response.Email).get("person.name"));
+        intent.putExtra("email", response.Email);
 
-        // If emails were found from coalition:
-
+        PickUpLocation loc = CRDataManager.getInstance().convertFromStringToPickUpLocation(response.Pickup_location);
+        intent.putExtra("pickup_name", loc.locationName);
+        intent.putExtra("pickup_latitude", loc.latitude);
+        intent.putExtra("pickup_longitude", loc.longitude);
+        intent.putExtra("number", result.get(response.Email).get("person.number"));
+        startActivity(intent);
     }
 
     private CountDownTimer initializeCountDownTextView() {
