@@ -110,9 +110,8 @@ public class MpsgStarter {
                 String[] attriValueArray = col.split("=");
                 if (attriValueArray[0].equals("person.email")) {
                     emailOfPerson = attriValueArray[1];
-                } else {
-                    hashMapOfAttributes.put(attriValueArray[0], attriValueArray[1]);
                 }
+                hashMapOfAttributes.put(attriValueArray[0], attriValueArray[1]);
             }
 
             if (emailOfPerson != null) {
