@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -17,9 +19,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
+import sg.edu.nus.cabrepublic.models.PickUpLocation;
+import sg.edu.nus.cabrepublic.utilities.CRDataManager;
+import sg.edu.nus.cabrepublic.utilities.ViewHelper;
+
 
 public class TaxiHomeActivity extends Activity {
     private GoogleMap map;
+    Handler poller = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,10 +70,26 @@ public class TaxiHomeActivity extends Activity {
     }
 
     private void updateCustomersLocation () {
-        MarkerOptions mockMarker1 = new MarkerOptions().position(new LatLng(1.296298, 103.770976)).snippet("nihao");
-        MarkerOptions mockMarker2 = new MarkerOptions().position(new LatLng(1.289090, 103.783229)).snippet("hello");
-        map.addMarker(mockMarker1);
-        map.addMarker(mockMarker2);
+
+        Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                map.clear();
+                if (msg.what == 0) {
+                    ArrayList<PickUpLocation> locations = (ArrayList<PickUpLocation>) msg.obj;
+                    for (PickUpLocation p : locations) {
+                        if (p != null) {
+                            MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(p.latitude, p.longitude)).snippet(p.locationName);
+                            map.addMarker(markerOptions);
+                        }
+
+                    }
+                } else {
+
+                }
+            }
+        };
+        CRDataManager.getInstance().findAllMatchingsWithCompletion(handler);
     }
 
     private void setUpMapMarkerListener () {
@@ -83,6 +108,7 @@ public class TaxiHomeActivity extends Activity {
                                         .title("Customer Info:")
                                         .snippet(marker.getSnippet()));
                                 m.showInfoWindow();
+                                poller.removeCallbacksAndMessages(null);
                                 map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                     @Override
                                     public boolean onMarkerClick(Marker marker) {
@@ -92,7 +118,7 @@ public class TaxiHomeActivity extends Activity {
                                                     @Override
                                                     public void onClick(DialogInterface dialogInterface, int i) {
                                                         map.clear();
-                                                        updateCustomersLocation();
+                                                        centerMapOnMyLocation();
                                                         setUpMapMarkerListener();
                                                     }
                                                 })
@@ -119,5 +145,21 @@ public class TaxiHomeActivity extends Activity {
             myLocation = new LatLng(location.getLatitude(), location.getLongitude());
         }
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 13.0));
+
+        final long interval = 15000;
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updateCustomersLocation();
+                poller.postDelayed(this, interval);
+            }
+        };
+        poller.postDelayed(runnable, interval/10);
+    }
+
+    @Override
+    public void finish() {
+        poller.removeCallbacksAndMessages(null);
+        super.finish();
     }
 }
