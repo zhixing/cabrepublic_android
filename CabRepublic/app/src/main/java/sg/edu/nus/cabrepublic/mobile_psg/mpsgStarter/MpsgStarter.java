@@ -110,7 +110,7 @@ public class MpsgStarter {
             //after split example: person.name=zhixing
             for (String col : columns) {
                 String[] attriValueArray = col.split("=");
-                if (attriValueArray[0].equals("person.name")) {
+                if (attriValueArray[0].equals("person.email")) {
                     emailOfPerson = attriValueArray[1];
                 } else {
                     hashMapOfAttributes.put(attriValueArray[0], attriValueArray[1]);
