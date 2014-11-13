@@ -47,7 +47,7 @@ public class MatchedInfoActivity extends Activity {
         String urlOfProfilePicture = intent.getStringExtra("urlOfProfilePicture");
         String handphoneNumber = intent.getStringExtra("number");
         String pickUpName = intent.getStringExtra("pickup_name");
-        long pickUpLongtitude = Long.parseLong(intent.getStringExtra("pickup_longtitude"));
+        long pickUpLongtitude = Long.parseLong(intent.getStringExtra("pickup_longitude"));
         long pickUpLatitude = Long.parseLong(intent.getStringExtra("pickup_latitude"));
 
         this.initializeNameAndAgeTextView(name, age);
