@@ -95,7 +95,7 @@ public class HomePageActivity extends Activity {
         map.setMyLocationEnabled(true);
         android.os.Handler delayedHandler = new android.os.Handler(){
 
-        }
+        };
         centerMapOnMyLocation();
     }
 
