@@ -124,9 +124,11 @@ public class HomePageActivity extends Activity {
 
         String preferenceString = "";
         if (crDataManager.currentUser.Gender_preference == crDataManager.GENDER_FEMALE) {
-            preferenceString += "Male. ";
-        } else if (crDataManager.currentUser.Gender_preference == crDataManager.GENDER_MALE) {
             preferenceString += "Female. ";
+        } else if (crDataManager.currentUser.Gender_preference == crDataManager.GENDER_MALE) {
+            preferenceString += "Male. ";
+        } else if (crDataManager.currentUser.Gender_preference == crDataManager.GENDER_MALE){
+            preferenceString += "Both genders. ";
         }
 
         preferenceString += "Age between " + crDataManager.currentUser.Age_min + " and " + crDataManager.currentUser.Age_max;
