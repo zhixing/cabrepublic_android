@@ -365,6 +365,7 @@ public class HomePageActivity extends Activity {
         Intent intent = new Intent(HomePageActivity.this, MatchedInfoActivity.class);
         intent.putExtra("name", result.get(response.Email).get("person.name"));
         intent.putExtra("email", response.Email);
+        intent.putExtra("age", result.get(response.Email).get("person.age"));
 
         PickUpLocation loc = CRDataManager.getInstance().convertFromStringToPickUpLocation(response.Pickup_location);
         intent.putExtra("pickup_name", loc.locationName);
